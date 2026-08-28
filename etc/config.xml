@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <commerce_cachevary>
+            <policy>
+                <!--
+                    Off, because turning it on changes what the cache keys on
+                    and that is a decision to take after reading the report
+                    rather than a side effect of installing a module.
+                -->
+                <enabled>0</enabled>
+                <cacheable_customer_segments/>
+                <bucket_budget>8</bucket_budget>
+            </policy>
+        </commerce_cachevary>
+    </default>
+</config>
