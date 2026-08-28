@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * The hash has to be the framework's own, salt included, or Varnish keys on something Magento will not reproduce.
  */
-final class ContextVaryHasherTest extends TestCase
+class ContextVaryHasherTest extends TestCase
 {
     use ObjectManagerIsolation;
 
@@ -50,7 +50,7 @@ final class ContextVaryHasherTest extends TestCase
         );
 
         ksort($data);
-        self::assertSame(hash('sha256', (string) json_encode($data) . '|' . self::SALT), $hash);
+        $this->assertSame(hash('sha256', (string) json_encode($data) . '|' . self::SALT), $hash);
     }
 
     /**
@@ -63,12 +63,12 @@ final class ContextVaryHasherTest extends TestCase
             ['customer_group' => 0, 'customer_logged_in' => false]
         );
 
-        self::assertNull($this->hasher()->hash($snapshot));
+        $this->assertNull($this->hasher()->hash($snapshot));
     }
 
     public function testAnEmptySnapshotHashesToNothing(): void
     {
-        self::assertNull($this->hasher()->hash(new ContextSnapshot()));
+        $this->assertNull($this->hasher()->hash(new ContextSnapshot()));
     }
 
     /**
@@ -81,7 +81,7 @@ final class ContextVaryHasherTest extends TestCase
         $first = $hasher->hash(new ContextSnapshot(['a' => '1', 'b' => '2'], ['a' => 0, 'b' => 0]));
         $second = $hasher->hash(new ContextSnapshot(['b' => '2', 'a' => '1'], ['b' => 0, 'a' => 0]));
 
-        self::assertSame($first, $second);
+        $this->assertSame($first, $second);
     }
 
     private function hasher(): ContextVaryHasher

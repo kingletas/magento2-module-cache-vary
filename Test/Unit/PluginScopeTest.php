@@ -13,7 +13,7 @@ use SimpleXMLElement;
 /**
  * A plugin on `Http\Context` declared in a global `di.xml` binds to nothing, so it goes per area.
  */
-final class PluginScopeTest extends TestCase
+class PluginScopeTest extends TestCase
 {
     private const INTERCEPTED = 'Magento\Framework\App\Http\Context';
     private const PLUGIN = 'Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin';
@@ -31,7 +31,7 @@ final class PluginScopeTest extends TestCase
      */
     public function testThePluginIsDeclaredInEachAreaThatHashesTheKey(string $area): void
     {
-        self::assertSame(
+        $this->assertSame(
             self::PLUGIN,
             $this->pluginOn(sprintf('etc/%s/di.xml', $area)),
             sprintf('etc/%s/di.xml must plug %s.', $area, self::INTERCEPTED)
@@ -43,7 +43,7 @@ final class PluginScopeTest extends TestCase
      */
     public function testTheGlobalScopeDeclaresNoPluginOnTheContext(): void
     {
-        self::assertNull(
+        $this->assertNull(
             $this->pluginOn('etc/di.xml'),
             'A plugin on ' . self::INTERCEPTED . ' in the global di.xml binds to nothing.'
         );
@@ -58,7 +58,7 @@ final class PluginScopeTest extends TestCase
         }
 
         $config = simplexml_load_file($path);
-        self::assertInstanceOf(SimpleXMLElement::class, $config, $relativePath . ' did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $config, $relativePath . ' did not parse.');
 
         foreach ($config->type as $type) {
             if ((string) $type['name'] !== self::INTERCEPTED) {

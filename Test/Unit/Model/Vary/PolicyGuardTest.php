@@ -16,7 +16,7 @@ use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
 use Magento\PageCache\Model\Config as PageCacheConfig;
 use PHPUnit\Framework\TestCase;
 
-final class PolicyGuardTest extends TestCase
+class PolicyGuardTest extends TestCase
 {
     private const SECTION = 'commerce_cachevary';
 
@@ -24,8 +24,8 @@ final class PolicyGuardTest extends TestCase
     {
         $decision = $this->guard(enabled: true, fpcOn: true, type: PageCacheConfig::VARNISH)->decide();
 
-        self::assertTrue($decision->applies());
-        self::assertSame('narrowing the Varnish cache key', $decision->reason());
+        $this->assertTrue($decision->applies());
+        $this->assertSame('narrowing the Varnish cache key', $decision->reason());
     }
 
     /**
@@ -35,8 +35,8 @@ final class PolicyGuardTest extends TestCase
     {
         $decision = $this->guard(enabled: true, fpcOn: true, type: PageCacheConfig::BUILT_IN)->decide();
 
-        self::assertFalse($decision->applies());
-        self::assertSame(
+        $this->assertFalse($decision->applies());
+        $this->assertSame(
             'the full-page cache is the built-in cache, which this policy is not verified against',
             $decision->reason()
         );
@@ -49,31 +49,31 @@ final class PolicyGuardTest extends TestCase
     {
         $decision = $this->guard(enabled: true, fpcOn: true, type: 42)->decide();
 
-        self::assertFalse($decision->applies());
-        self::assertStringContainsString('caching application 42', $decision->reason());
+        $this->assertFalse($decision->applies());
+        $this->assertStringContainsString('caching application 42', $decision->reason());
     }
 
     public function testAnAcceptedCachingApplicationCanBeAddedThroughWiring(): void
     {
         $guard = $this->guard(enabled: true, fpcOn: true, type: 42, accepted: [PageCacheConfig::VARNISH, 42]);
 
-        self::assertTrue($guard->decide()->applies());
+        $this->assertTrue($guard->decide()->applies());
     }
 
     public function testASwitchedOffPolicyNeverApplies(): void
     {
         $decision = $this->guard(enabled: false, fpcOn: true, type: PageCacheConfig::VARNISH)->decide();
 
-        self::assertFalse($decision->applies());
-        self::assertSame('the policy is switched off', $decision->reason());
+        $this->assertFalse($decision->applies());
+        $this->assertSame('the policy is switched off', $decision->reason());
     }
 
     public function testADisabledFullPageCacheNeverApplies(): void
     {
         $decision = $this->guard(enabled: true, fpcOn: false, type: PageCacheConfig::VARNISH)->decide();
 
-        self::assertFalse($decision->applies());
-        self::assertStringContainsString('full-page cache is off', $decision->reason());
+        $this->assertFalse($decision->applies());
+        $this->assertStringContainsString('full-page cache is off', $decision->reason());
     }
 
     /**
@@ -83,7 +83,7 @@ final class PolicyGuardTest extends TestCase
     {
         $guard = $this->guard(enabled: true, fpcOn: true, type: PageCacheConfig::VARNISH, accepted: []);
 
-        self::assertFalse($guard->decide()->applies());
+        $this->assertFalse($guard->decide()->applies());
     }
 
     /**
@@ -93,7 +93,7 @@ final class PolicyGuardTest extends TestCase
     {
         $guard = $this->guard(enabled: true, fpcOn: true, type: PageCacheConfig::VARNISH, accepted: ['2']);
 
-        self::assertTrue($guard->decide()->applies());
+        $this->assertTrue($guard->decide()->applies());
     }
 
     /**
@@ -110,9 +110,9 @@ final class PolicyGuardTest extends TestCase
 
         $decision = $guard->decide();
 
-        self::assertFalse($decision->applies());
-        self::assertSame(GuardOutcome::Misconfigured, $decision->outcome());
-        self::assertStringContainsString('customer_group', $decision->reason());
+        $this->assertFalse($decision->applies());
+        $this->assertSame(GuardOutcome::Misconfigured, $decision->outcome());
+        $this->assertStringContainsString('customer_group', $decision->reason());
     }
 
     public function testARuleOnLoggedInStateIsRefusedToo(): void
@@ -124,7 +124,7 @@ final class PolicyGuardTest extends TestCase
             rules: [new ExcludedKey('customer_logged_in')]
         );
 
-        self::assertSame(GuardOutcome::Misconfigured, $guard->decide()->outcome());
+        $this->assertSame(GuardOutcome::Misconfigured, $guard->decide()->outcome());
     }
 
     /**
@@ -139,7 +139,7 @@ final class PolicyGuardTest extends TestCase
             rules: [new ExcludedKey('customer_group')]
         );
 
-        self::assertSame(GuardOutcome::Misconfigured, $guard->decide()->outcome());
+        $this->assertSame(GuardOutcome::Misconfigured, $guard->decide()->outcome());
     }
 
     public function testAnOrdinaryRuleAlongsideAProtectedOneDoesNotRescueIt(): void
@@ -151,7 +151,7 @@ final class PolicyGuardTest extends TestCase
             rules: [new ExcludedKey('customer_segment'), new ExcludedKey('customer_group')]
         );
 
-        self::assertSame(GuardOutcome::Misconfigured, $guard->decide()->outcome());
+        $this->assertSame(GuardOutcome::Misconfigured, $guard->decide()->outcome());
     }
 
     /**

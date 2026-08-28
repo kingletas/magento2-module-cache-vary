@@ -10,7 +10,7 @@ namespace Commerce\CacheVary\Test\Unit\Model\Vary;
 use Commerce\CacheVary\Model\Vary\ContextSnapshot;
 use PHPUnit\Framework\TestCase;
 
-final class ContextSnapshotTest extends TestCase
+class ContextSnapshotTest extends TestCase
 {
     public function testWithoutDropsTheValueAndItsDefault(): void
     {
@@ -18,8 +18,8 @@ final class ContextSnapshotTest extends TestCase
 
         $result = $snapshot->without('a');
 
-        self::assertSame(['b' => 2], $result->data());
-        self::assertSame(['b' => 0], $result->defaults());
+        $this->assertSame(['b' => 2], $result->data());
+        $this->assertSame(['b' => 0], $result->defaults());
     }
 
     /**
@@ -29,15 +29,15 @@ final class ContextSnapshotTest extends TestCase
     {
         $result = (new ContextSnapshot())->with('a', ['1']);
 
-        self::assertSame(['a' => ['1']], $result->data());
-        self::assertArrayHasKey('a', $result->defaults());
+        $this->assertSame(['a' => ['1']], $result->data());
+        $this->assertArrayHasKey('a', $result->defaults());
     }
 
     public function testWithKeepsAnExistingDefault(): void
     {
         $snapshot = new ContextSnapshot(['a' => ['1', '2']], ['a' => []]);
 
-        self::assertSame(['a' => []], $snapshot->with('a', ['1'])->defaults());
+        $this->assertSame(['a' => []], $snapshot->with('a', ['1'])->defaults());
     }
 
     public function testTheOriginalIsNeverChanged(): void
@@ -47,23 +47,23 @@ final class ContextSnapshotTest extends TestCase
         $snapshot->without('a');
         $snapshot->with('a', 9);
 
-        self::assertSame(['a' => 1], $snapshot->data());
+        $this->assertSame(['a' => 1], $snapshot->data());
     }
 
     public function testEqualityComparesBothHalves(): void
     {
         $snapshot = new ContextSnapshot(['a' => 1], ['a' => 0]);
 
-        self::assertTrue($snapshot->equals(new ContextSnapshot(['a' => 1], ['a' => 0])));
-        self::assertFalse($snapshot->equals(new ContextSnapshot(['a' => 1], ['a' => 1])));
-        self::assertFalse($snapshot->equals(new ContextSnapshot(['a' => 2], ['a' => 0])));
+        $this->assertTrue($snapshot->equals(new ContextSnapshot(['a' => 1], ['a' => 0])));
+        $this->assertFalse($snapshot->equals(new ContextSnapshot(['a' => 1], ['a' => 1])));
+        $this->assertFalse($snapshot->equals(new ContextSnapshot(['a' => 2], ['a' => 0])));
     }
 
     public function testMissingKeysReadAsNullRatherThanWarning(): void
     {
         $snapshot = new ContextSnapshot();
 
-        self::assertFalse($snapshot->has('a'));
-        self::assertNull($snapshot->valueOf('a'));
+        $this->assertFalse($snapshot->has('a'));
+        $this->assertNull($snapshot->valueOf('a'));
     }
 }

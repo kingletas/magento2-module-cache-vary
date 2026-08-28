@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * What this module costs a request, given that it runs on every one of them.
  */
-final class PolicyCostTest extends TestCase
+class PolicyCostTest extends TestCase
 {
     use BudgetAssertions;
 
@@ -37,7 +37,7 @@ final class PolicyCostTest extends TestCase
      */
     public function testTheCostDoesNotGrowWithTheNumberOfContextValues(): void
     {
-        self::assertConstantCost(
+        $this->assertConstantCost(
             'config reads while filtering a context',
             fn (int $keys): int => $this->filter($keys)->reads()
         );
@@ -48,7 +48,7 @@ final class PolicyCostTest extends TestCase
      */
     public function testTheCostDoesNotGrowWithTheNumberOfSegments(): void
     {
-        self::assertConstantCost(
+        $this->assertConstantCost(
             'config reads while filtering a customer holding many segments',
             fn (int $segments): int => $this->filter(1, $segments)->reads()
         );
@@ -61,7 +61,7 @@ final class PolicyCostTest extends TestCase
     {
         $scopeConfig = $this->filter(20, 20);
 
-        self::assertCostAtMost(
+        $this->assertCostAtMost(
             'filtering one context',
             2,
             $scopeConfig->reads(),
@@ -76,7 +76,7 @@ final class PolicyCostTest extends TestCase
     {
         $scopeConfig = $this->filter(20, 20, enabled: false);
 
-        self::assertCostAtMost('a switched-off policy', 1, $scopeConfig->reads(), $scopeConfig->summary());
+        $this->assertCostAtMost('a switched-off policy', 1, $scopeConfig->reads(), $scopeConfig->summary());
     }
 
     private function filter(int $keys, int $segments = 3, bool $enabled = true): CountingScopeConfig

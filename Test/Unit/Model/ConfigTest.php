@@ -11,23 +11,23 @@ use Commerce\CacheVary\Model\Config;
 use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
 use PHPUnit\Framework\TestCase;
 
-final class ConfigTest extends TestCase
+class ConfigTest extends TestCase
 {
     private const SECTION = 'commerce_cachevary';
 
     public function testTheSwitchReadsFromItsOwnSection(): void
     {
-        self::assertTrue($this->config([self::SECTION . '/policy/enabled' => '1'])->isEnabled());
-        self::assertFalse($this->config([self::SECTION . '/policy/enabled' => '0'])->isEnabled());
-        self::assertFalse($this->config([])->isEnabled());
+        $this->assertTrue($this->config([self::SECTION . '/policy/enabled' => '1'])->isEnabled());
+        $this->assertFalse($this->config([self::SECTION . '/policy/enabled' => '0'])->isEnabled());
+        $this->assertFalse($this->config([])->isEnabled());
     }
 
     public function testTheBudgetFallsBackWhenUnsetOrNonsense(): void
     {
-        self::assertSame(8, $this->config([])->getBucketBudget());
-        self::assertSame(8, $this->config([self::SECTION . '/policy/bucket_budget' => '0'])->getBucketBudget());
-        self::assertSame(8, $this->config([self::SECTION . '/policy/bucket_budget' => 'lots'])->getBucketBudget());
-        self::assertSame(32, $this->config([self::SECTION . '/policy/bucket_budget' => '32'])->getBucketBudget());
+        $this->assertSame(8, $this->config([])->getBucketBudget());
+        $this->assertSame(8, $this->config([self::SECTION . '/policy/bucket_budget' => '0'])->getBucketBudget());
+        $this->assertSame(8, $this->config([self::SECTION . '/policy/bucket_budget' => 'lots'])->getBucketBudget());
+        $this->assertSame(32, $this->config([self::SECTION . '/policy/bucket_budget' => '32'])->getBucketBudget());
     }
 
     /**

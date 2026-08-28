@@ -14,13 +14,13 @@ use Commerce\CacheVary\Test\Unit\Fake\FixedCeilingRule;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-final class VaryPolicyTest extends TestCase
+class VaryPolicyTest extends TestCase
 {
     public function testNoRulesLeavesTheSnapshotAlone(): void
     {
         $snapshot = new ContextSnapshot(['a' => 1], ['a' => 0]);
 
-        self::assertTrue((new VaryPolicy())->apply($snapshot)->equals($snapshot));
+        $this->assertTrue((new VaryPolicy())->apply($snapshot)->equals($snapshot));
     }
 
     public function testEveryRuleIsApplied(): void
@@ -29,26 +29,26 @@ final class VaryPolicyTest extends TestCase
 
         $result = $policy->apply(new ContextSnapshot(['a' => 1, 'b' => 2, 'c' => 3], []));
 
-        self::assertSame(['c' => 3], $result->data());
+        $this->assertSame(['c' => 3], $result->data());
     }
 
     public function testTheCeilingIsTheProductOfTheRules(): void
     {
         $policy = new VaryPolicy([new FixedCeilingRule('a', 4), new FixedCeilingRule('b', 8)]);
 
-        self::assertSame(32, $policy->ceiling());
+        $this->assertSame(32, $policy->ceiling());
     }
 
     public function testNoRulesPermitsOneVariant(): void
     {
-        self::assertSame(1, (new VaryPolicy())->ceiling());
+        $this->assertSame(1, (new VaryPolicy())->ceiling());
     }
 
     public function testOneUnboundedRuleMakesTheWholePolicyUnbounded(): void
     {
         $policy = new VaryPolicy([new FixedCeilingRule('a', 2), new FixedCeilingRule('b', null)]);
 
-        self::assertNull($policy->ceiling());
+        $this->assertNull($policy->ceiling());
     }
 
     /**
@@ -58,7 +58,7 @@ final class VaryPolicyTest extends TestCase
     {
         $policy = new VaryPolicy([new FixedCeilingRule('a', 2 ** 20), new FixedCeilingRule('b', 2 ** 20)]);
 
-        self::assertNull($policy->ceiling());
+        $this->assertNull($policy->ceiling());
     }
 
     public function testSomethingThatIsNotARuleIsRefusedAtConstruction(): void

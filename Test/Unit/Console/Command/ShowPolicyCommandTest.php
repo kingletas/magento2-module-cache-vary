@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-final class ShowPolicyCommandTest extends TestCase
+class ShowPolicyCommandTest extends TestCase
 {
     private const SECTION = 'commerce_cachevary';
     private const PATH = 'policy/cacheable_customer_segments';
@@ -31,33 +31,33 @@ final class ShowPolicyCommandTest extends TestCase
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => '']);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('1 cache variant(s) permitted', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('1 cache variant(s) permitted', $tester->getDisplay());
     }
 
     public function testAnAllowlistWithinBudgetPasses(): void
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => '9,10,12', 'budget' => '8']);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('8 cache variant(s) permitted', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('8 cache variant(s) permitted', $tester->getDisplay());
     }
 
     public function testGoingOverBudgetFailsAndNamesTheKey(): void
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => '9,10,12,13', 'budget' => '8']);
 
-        self::assertSame(Command::FAILURE, $tester->getStatusCode());
-        self::assertStringContainsString('16 cache variants permitted', $tester->getDisplay());
-        self::assertStringContainsString('customer_segment', $tester->getDisplay());
+        $this->assertSame(Command::FAILURE, $tester->getStatusCode());
+        $this->assertStringContainsString('16 cache variants permitted', $tester->getDisplay());
+        $this->assertStringContainsString('customer_segment', $tester->getDisplay());
     }
 
     public function testAnUncountableAllowlistFails(): void
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => implode(',', range(1, 31))]);
 
-        self::assertSame(Command::FAILURE, $tester->getStatusCode());
-        self::assertStringContainsString('unbounded', $tester->getDisplay());
+        $this->assertSame(Command::FAILURE, $tester->getStatusCode());
+        $this->assertStringContainsString('unbounded', $tester->getDisplay());
     }
 
     /**
@@ -67,9 +67,9 @@ final class ShowPolicyCommandTest extends TestCase
     {
         $tester = $this->tester(['enabled' => '0', 'allowlist' => '']);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('not applied', $tester->getDisplay());
-        self::assertStringContainsString('the built-in cache', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('not applied', $tester->getDisplay());
+        $this->assertStringContainsString('the built-in cache', $tester->getDisplay());
     }
 
     /**
@@ -88,10 +88,10 @@ final class ShowPolicyCommandTest extends TestCase
             ),
         ]);
 
-        self::assertSame(Command::FAILURE, $tester->getStatusCode());
-        self::assertStringContainsString('misconfigured', $tester->getDisplay());
-        self::assertStringContainsString('customer_group', $tester->getDisplay());
-        self::assertStringContainsString('Fix the rules argument in di.xml', $tester->getDisplay());
+        $this->assertSame(Command::FAILURE, $tester->getStatusCode());
+        $this->assertStringContainsString('misconfigured', $tester->getDisplay());
+        $this->assertStringContainsString('customer_group', $tester->getDisplay());
+        $this->assertStringContainsString('Fix the rules argument in di.xml', $tester->getDisplay());
     }
 
     /**
@@ -101,15 +101,15 @@ final class ShowPolicyCommandTest extends TestCase
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => '', 'applies' => false]);
 
-        self::assertStringContainsString('not applied', $tester->getDisplay());
-        self::assertStringNotContainsString('cache variant(s) permitted', $tester->getDisplay());
+        $this->assertStringContainsString('not applied', $tester->getDisplay());
+        $this->assertStringNotContainsString('cache variant(s) permitted', $tester->getDisplay());
     }
 
     public function testASwitchedOffPolicyFailsWhenTheGateDemandsOne(): void
     {
         $tester = $this->tester(['enabled' => '0', 'allowlist' => '', 'require-enabled' => true]);
 
-        self::assertSame(Command::FAILURE, $tester->getStatusCode());
+        $this->assertSame(Command::FAILURE, $tester->getStatusCode());
     }
 
     public function testNoRulesDeclaredSaysSoRatherThanClaimingSafety(): void
@@ -129,16 +129,16 @@ final class ShowPolicyCommandTest extends TestCase
 
         $tester->execute([]);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('No rules are declared', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('No rules are declared', $tester->getDisplay());
     }
 
     public function testAnOpenSourceStoreSaysNothingWasChecked(): void
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => '']);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('Customer segments are not installed here', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('Customer segments are not installed here', $tester->getDisplay());
     }
 
     public function testNoSegmentDrivingCachedContentPasses(): void
@@ -149,8 +149,8 @@ final class ShowPolicyCommandTest extends TestCase
             'segments' => new StubSegmentSource(true, []),
         ]);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('No customer segment drives content', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('No customer segment drives content', $tester->getDisplay());
     }
 
     /**
@@ -166,8 +166,8 @@ final class ShowPolicyCommandTest extends TestCase
             ]),
         ]);
 
-        self::assertSame(Command::FAILURE, $tester->getStatusCode());
-        self::assertStringContainsString('Not allowlisted: segment 7 "Trade"', $tester->getDisplay());
+        $this->assertSame(Command::FAILURE, $tester->getStatusCode());
+        $this->assertStringContainsString('Not allowlisted: segment 7 "Trade"', $tester->getDisplay());
     }
 
     public function testTheSameSegmentOnTheAllowlistPasses(): void
@@ -180,8 +180,8 @@ final class ShowPolicyCommandTest extends TestCase
             ]),
         ]);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('are allowlisted', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('are allowlisted', $tester->getDisplay());
     }
 
     /**
@@ -197,8 +197,8 @@ final class ShowPolicyCommandTest extends TestCase
             ]),
         ]);
 
-        self::assertSame(Command::FAILURE, $tester->getStatusCode());
-        self::assertStringContainsString('could not be read', $tester->getDisplay());
+        $this->assertSame(Command::FAILURE, $tester->getStatusCode());
+        $this->assertStringContainsString('could not be read', $tester->getDisplay());
     }
 
     /**
@@ -214,8 +214,8 @@ final class ShowPolicyCommandTest extends TestCase
             ]),
         ]);
 
-        self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringNotContainsString('Not allowlisted', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringNotContainsString('Not allowlisted', $tester->getDisplay());
     }
 
     /**
@@ -227,8 +227,8 @@ final class ShowPolicyCommandTest extends TestCase
 
         $this->tester(['enabled' => '1', 'allowlist' => '', 'segments' => $segments, 'store' => '2']);
 
-        self::assertTrue($segments->wasAsked);
-        self::assertSame(2, $segments->askedFor);
+        $this->assertTrue($segments->wasAsked);
+        $this->assertSame(2, $segments->askedFor);
     }
 
     /**
@@ -240,8 +240,8 @@ final class ShowPolicyCommandTest extends TestCase
 
         $this->tester(['enabled' => '1', 'allowlist' => '', 'segments' => $segments]);
 
-        self::assertTrue($segments->wasAsked);
-        self::assertNull($segments->askedFor);
+        $this->assertTrue($segments->wasAsked);
+        $this->assertNull($segments->askedFor);
     }
 
     /**
@@ -251,8 +251,8 @@ final class ShowPolicyCommandTest extends TestCase
     {
         $tester = $this->tester(['enabled' => '1', 'allowlist' => '', 'store' => '404']);
 
-        self::assertSame(Command::INVALID, $tester->getStatusCode());
-        self::assertStringContainsString('No store with id 404', $tester->getDisplay());
+        $this->assertSame(Command::INVALID, $tester->getStatusCode());
+        $this->assertStringContainsString('No store with id 404', $tester->getDisplay());
     }
 
     /**

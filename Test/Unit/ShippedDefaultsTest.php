@@ -13,24 +13,24 @@ use SimpleXMLElement;
 /**
  * What this module does to a store that installs it and changes nothing.
  */
-final class ShippedDefaultsTest extends TestCase
+class ShippedDefaultsTest extends TestCase
 {
     /**
      * The one that matters: installing must not silently move every cache key.
      */
     public function testThePolicyIsOffOutOfTheBox(): void
     {
-        self::assertSame('0', $this->default('policy/enabled'));
+        $this->assertSame('0', $this->default('policy/enabled'));
     }
 
     public function testNoSegmentIsAllowlistedOutOfTheBox(): void
     {
-        self::assertSame('', $this->default('policy/cacheable_customer_segments'));
+        $this->assertSame('', $this->default('policy/cacheable_customer_segments'));
     }
 
     public function testTheBudgetHasAShippedValue(): void
     {
-        self::assertSame('8', $this->default('policy/bucket_budget'));
+        $this->assertSame('8', $this->default('policy/bucket_budget'));
     }
 
     /**
@@ -41,7 +41,7 @@ final class ShippedDefaultsTest extends TestCase
         $section = $this->config()->default->children()[0]->getName();
 
         $di = simplexml_load_file(dirname(__DIR__, 2) . '/etc/di.xml');
-        self::assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
 
         $configured = null;
 
@@ -53,8 +53,8 @@ final class ShippedDefaultsTest extends TestCase
             }
         }
 
-        self::assertNotNull($configured, 'No <argument name="section"> found in etc/di.xml.');
-        self::assertSame($configured, $section);
+        $this->assertNotNull($configured, 'No <argument name="section"> found in etc/di.xml.');
+        $this->assertSame($configured, $section);
     }
 
     /**
@@ -63,7 +63,7 @@ final class ShippedDefaultsTest extends TestCase
     public function testEveryRuleConfigPathHasADefault(): void
     {
         $di = simplexml_load_file(dirname(__DIR__, 2) . '/etc/di.xml');
-        self::assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
 
         $paths = [];
 
@@ -75,10 +75,10 @@ final class ShippedDefaultsTest extends TestCase
             }
         }
 
-        self::assertNotSame([], $paths, 'No rule declares a configPath.');
+        $this->assertNotSame([], $paths, 'No rule declares a configPath.');
 
         foreach ($paths as $path) {
-            self::assertSame('', $this->default($path), $path . ' should ship empty.');
+            $this->assertSame('', $this->default($path), $path . ' should ship empty.');
         }
     }
 
@@ -88,7 +88,7 @@ final class ShippedDefaultsTest extends TestCase
     public function testOnlyVarnishIsAcceptedOutOfTheBox(): void
     {
         $di = simplexml_load_file(dirname(__DIR__, 2) . '/etc/di.xml');
-        self::assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
 
         $accepted = null;
 
@@ -104,8 +104,8 @@ final class ShippedDefaultsTest extends TestCase
             }
         }
 
-        self::assertNotNull($accepted, 'PolicyGuard declares no cachingApplications in etc/di.xml.');
-        self::assertSame(['2'], $accepted, 'Only Varnish (2) should ship accepted.');
+        $this->assertNotNull($accepted, 'PolicyGuard declares no cachingApplications in etc/di.xml.');
+        $this->assertSame(['2'], $accepted, 'Only Varnish (2) should ship accepted.');
     }
 
     /**
@@ -114,7 +114,7 @@ final class ShippedDefaultsTest extends TestCase
     public function testTheSegmentSourceAndTheRuleNameTheSameContextKey(): void
     {
         $di = simplexml_load_file(dirname(__DIR__, 2) . '/etc/di.xml');
-        self::assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
 
         $ruleKey = null;
 
@@ -136,8 +136,8 @@ final class ShippedDefaultsTest extends TestCase
             }
         }
 
-        self::assertNotNull($ruleKey, 'No rule declares a key in etc/di.xml.');
-        self::assertSame($ruleKey, $sourceKey, 'The segment source must report on the key the rule governs.');
+        $this->assertNotNull($ruleKey, 'No rule declares a key in etc/di.xml.');
+        $this->assertSame($ruleKey, $sourceKey, 'The segment source must report on the key the rule governs.');
     }
 
     /**
@@ -145,7 +145,7 @@ final class ShippedDefaultsTest extends TestCase
      */
     public function testTheIdentityKeysShipProtected(): void
     {
-        self::assertSame(
+        $this->assertSame(
             ['customer_group', 'customer_logged_in'],
             $this->arrayArgument('protectedKeys')
         );
@@ -157,7 +157,7 @@ final class ShippedDefaultsTest extends TestCase
     public function testNoShippedRuleGovernsAProtectedKey(): void
     {
         $di = simplexml_load_file(dirname(__DIR__, 2) . '/etc/di.xml');
-        self::assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
 
         $governed = [];
 
@@ -169,7 +169,7 @@ final class ShippedDefaultsTest extends TestCase
             }
         }
 
-        self::assertSame([], array_intersect($governed, $this->arrayArgument('protectedKeys')));
+        $this->assertSame([], array_intersect($governed, $this->arrayArgument('protectedKeys')));
     }
 
     /**
@@ -178,7 +178,7 @@ final class ShippedDefaultsTest extends TestCase
     private function arrayArgument(string $name): array
     {
         $di = simplexml_load_file(dirname(__DIR__, 2) . '/etc/di.xml');
-        self::assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $di, 'etc/di.xml did not parse.');
 
         foreach ($di->type as $type) {
             foreach ($type->arguments->argument ?? [] as $argument) {
@@ -188,7 +188,7 @@ final class ShippedDefaultsTest extends TestCase
             }
         }
 
-        self::fail(sprintf('No <argument name="%s"> found in etc/di.xml.', $name));
+        $this->fail(sprintf('No <argument name="%s"> found in etc/di.xml.', $name));
     }
 
     private function default(string $path): string
@@ -196,7 +196,7 @@ final class ShippedDefaultsTest extends TestCase
         [$group, $field] = explode('/', $path);
         $section = $this->config()->default->children()[0];
 
-        self::assertTrue(isset($section->{$group}->{$field}), sprintf('%s is not in etc/config.xml.', $path));
+        $this->assertTrue(isset($section->{$group}->{$field}), sprintf('%s is not in etc/config.xml.', $path));
 
         return trim((string) $section->{$group}->{$field});
     }
@@ -205,7 +205,7 @@ final class ShippedDefaultsTest extends TestCase
     {
         $config = simplexml_load_file(dirname(__DIR__, 2) . '/etc/config.xml');
 
-        self::assertInstanceOf(SimpleXMLElement::class, $config, 'etc/config.xml did not parse.');
+        $this->assertInstanceOf(SimpleXMLElement::class, $config, 'etc/config.xml did not parse.');
 
         return $config;
     }

@@ -10,7 +10,7 @@ namespace Commerce\CacheVary\Test\Unit\Model\Segment;
 use Commerce\CacheVary\Model\Segment\NoSegmentSource;
 use PHPUnit\Framework\TestCase;
 
-final class NoSegmentSourceTest extends TestCase
+class NoSegmentSourceTest extends TestCase
 {
     /**
      * Unavailable rather than empty, so the report says "not checked" instead of "nothing found".
@@ -19,7 +19,7 @@ final class NoSegmentSourceTest extends TestCase
     {
         $source = new NoSegmentSource();
 
-        self::assertFalse($source->isAvailable());
-        self::assertSame([], $source->findUsages());
+        $this->assertFalse($source->isAvailable());
+        $this->assertSame([], $source->findUsages());
     }
 }

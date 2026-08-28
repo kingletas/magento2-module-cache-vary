@@ -13,7 +13,7 @@ use Commerce\CacheVary\Model\Vary\ContextSnapshot;
 /**
  * A rule that changes nothing and reports whatever ceiling the test needs.
  */
-final class FixedCeilingRule implements VaryRuleInterface
+class FixedCeilingRule implements VaryRuleInterface
 {
     public function __construct(private readonly string $key, private readonly ?int $ceiling)
     {

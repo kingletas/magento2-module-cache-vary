@@ -14,7 +14,7 @@ use Commerce\CacheVary\Model\Vary\GuardOutcome;
 /**
  * A guard that answers however the test needs.
  */
-final class StubPolicyGuard implements PolicyGuardInterface
+class StubPolicyGuard implements PolicyGuardInterface
 {
     public function __construct(
         private readonly bool $applies,

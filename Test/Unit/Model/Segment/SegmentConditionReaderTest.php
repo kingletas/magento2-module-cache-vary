@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * The shapes are Adobe Commerce 2.4 serialization, not invented.
  */
-final class SegmentConditionReaderTest extends TestCase
+class SegmentConditionReaderTest extends TestCase
 {
     private const SEGMENT_CONDITION = 'Magento\\\\CustomerSegment\\\\Model\\\\Segment\\\\Condition\\\\Segment';
 
@@ -21,8 +21,8 @@ final class SegmentConditionReaderTest extends TestCase
     {
         $json = '{"type":"Magento\\\\SalesRule\\\\Model\\\\Rule\\\\Condition\\\\Combine","conditions":[]}';
 
-        self::assertFalse($this->reader()->mentionsSegments($json));
-        self::assertSame([], $this->reader()->read($json));
+        $this->assertFalse($this->reader()->mentionsSegments($json));
+        $this->assertSame([], $this->reader()->read($json));
     }
 
     /**
@@ -36,8 +36,8 @@ final class SegmentConditionReaderTest extends TestCase
             . '{"type":"Magento\\\\SalesRule\\\\Model\\\\Rule\\\\Condition\\\\Address","attribute":"base_subtotal",'
             . '"operator":">=","value":"100"}]}';
 
-        self::assertTrue($this->reader()->mentionsSegments($json));
-        self::assertSame([3], $this->reader()->read($json));
+        $this->assertTrue($this->reader()->mentionsSegments($json));
+        $this->assertSame([3], $this->reader()->read($json));
     }
 
     public function testItReadsAMultiValuedSegmentCondition(): void
@@ -45,7 +45,7 @@ final class SegmentConditionReaderTest extends TestCase
         $json = '{"type":"Combine","conditions":[{"type":"' . self::SEGMENT_CONDITION
             . '","operator":"()","value":["3","7","12"]}]}';
 
-        self::assertSame([3, 7, 12], $this->reader()->read($json));
+        $this->assertSame([3, 7, 12], $this->reader()->read($json));
     }
 
     /**
@@ -56,7 +56,7 @@ final class SegmentConditionReaderTest extends TestCase
         $json = '{"type":"Combine","conditions":[{"type":"Combine","conditions":['
             . '{"type":"Combine","conditions":[{"type":"' . self::SEGMENT_CONDITION . '","value":"9"}]}]}]}';
 
-        self::assertSame([9], $this->reader()->read($json));
+        $this->assertSame([9], $this->reader()->read($json));
     }
 
     public function testDuplicatesCollapse(): void
@@ -65,7 +65,7 @@ final class SegmentConditionReaderTest extends TestCase
             . '{"type":"' . self::SEGMENT_CONDITION . '","value":"4"},'
             . '{"type":"' . self::SEGMENT_CONDITION . '","value":"4"}]}';
 
-        self::assertSame([4], $this->reader()->read($json));
+        $this->assertSame([4], $this->reader()->read($json));
     }
 
     /**
@@ -75,8 +75,8 @@ final class SegmentConditionReaderTest extends TestCase
     {
         $php = 'a:2:{s:4:"type";s:52:"Magento\\CustomerSegment\\Model\\Segment\\Condition\\Segment";}';
 
-        self::assertTrue($this->reader()->mentionsSegments($php));
-        self::assertNull($this->reader()->read($php));
+        $this->assertTrue($this->reader()->mentionsSegments($php));
+        $this->assertNull($this->reader()->read($php));
     }
 
     /**
@@ -86,13 +86,13 @@ final class SegmentConditionReaderTest extends TestCase
     {
         $json = '{"type":"Combine","conditions":[{"type":"' . self::SEGMENT_CONDITION . '","value":""}]}';
 
-        self::assertNull($this->reader()->read($json));
+        $this->assertNull($this->reader()->read($json));
     }
 
     public function testEmptyInputIsNotASegmentRule(): void
     {
-        self::assertFalse($this->reader()->mentionsSegments(''));
-        self::assertSame([], $this->reader()->read(''));
+        $this->assertFalse($this->reader()->mentionsSegments(''));
+        $this->assertSame([], $this->reader()->read(''));
     }
 
     private function reader(): SegmentConditionReader

@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * How many copies of one page a spread of segment memberships makes the edge hold.
  */
-final class SegmentFragmentationTest extends TestCase
+class SegmentFragmentationTest extends TestCase
 {
     use ObjectManagerIsolation;
 
@@ -75,7 +75,7 @@ final class SegmentFragmentationTest extends TestCase
      */
     public function testWithoutThePolicyEverySegmentCombinationIsItsOwnCacheEntry(): void
     {
-        self::assertCount(
+        $this->assertCount(
             count(self::COMBINATIONS),
             array_unique($this->varyStrings(enabled: false, allowlist: ''))
         );
@@ -83,7 +83,7 @@ final class SegmentFragmentationTest extends TestCase
 
     public function testAnEmptyAllowlistCollapsesThemAllOntoOne(): void
     {
-        self::assertCount(1, array_unique($this->varyStrings(enabled: true, allowlist: '')));
+        $this->assertCount(1, array_unique($this->varyStrings(enabled: true, allowlist: '')));
     }
 
     /**
@@ -91,14 +91,14 @@ final class SegmentFragmentationTest extends TestCase
      */
     public function testAllowlistingOneSegmentSplitsTheCacheExactlyOnce(): void
     {
-        self::assertCount(2, array_unique($this->varyStrings(enabled: true, allowlist: '9')));
+        $this->assertCount(2, array_unique($this->varyStrings(enabled: true, allowlist: '9')));
     }
 
     public function testAllowlistingThreeSegmentsStaysWithinTheirCombinations(): void
     {
         $distinct = array_unique($this->varyStrings(enabled: true, allowlist: '9,10,12'));
 
-        self::assertLessThanOrEqual(2 ** 3, count($distinct));
+        $this->assertLessThanOrEqual(2 ** 3, count($distinct));
     }
 
     /**
@@ -112,7 +112,7 @@ final class SegmentFragmentationTest extends TestCase
 
         $plugin = $this->plugin(enabled: true, allowlist: '');
 
-        self::assertNull($plugin->aroundGetVaryString($context, static fn () => $context->getVaryString()));
+        $this->assertNull($plugin->aroundGetVaryString($context, static fn () => $context->getVaryString()));
     }
 
     /**

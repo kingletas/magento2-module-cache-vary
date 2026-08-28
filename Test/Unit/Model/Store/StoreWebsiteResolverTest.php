@@ -14,11 +14,11 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 
-final class StoreWebsiteResolverTest extends TestCase
+class StoreWebsiteResolverTest extends TestCase
 {
     public function testNoStoreMeansNoWebsiteFilter(): void
     {
-        self::assertNull($this->resolver()->websiteIdOf(null));
+        $this->assertNull($this->resolver()->websiteIdOf(null));
     }
 
     public function testItReadsTheWebsiteOffTheStore(): void
@@ -26,7 +26,7 @@ final class StoreWebsiteResolverTest extends TestCase
         $store = $this->createMock(StoreInterface::class);
         $store->method('getWebsiteId')->willReturn('2');
 
-        self::assertSame(2, $this->resolver($store)->websiteIdOf(3));
+        $this->assertSame(2, $this->resolver($store)->websiteIdOf(3));
     }
 
     /**

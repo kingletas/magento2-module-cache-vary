@@ -7,29 +7,40 @@ declare(strict_types=1);
 
 namespace Commerce\CacheVary\Test\Unit\Plugin\Framework\App\Http;
 
+use Commerce\CacheVary\Api\PolicyGuardInterface;
+use Commerce\CacheVary\Api\VaryHasherInterface;
+use Commerce\CacheVary\Model\Vary\ContextSnapshot;
+use Commerce\CacheVary\Model\Vary\GuardDecision;
+use Commerce\CacheVary\Model\Vary\GuardOutcome;
 use Commerce\CacheVary\Model\Vary\Rule\ExcludedKey;
 use Commerce\CacheVary\Model\Vary\VaryPolicy;
 use Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
-use Commerce\CacheVary\Test\Unit\Fake\RecordingHasher;
-use Commerce\CacheVary\Test\Unit\Fake\StubPolicyGuard;
 use Magento\Framework\App\Http\Context;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class VaryStringPluginTest extends TestCase
+class VaryStringPluginTest extends TestCase
 {
     private const UNTOUCHED = 'the framework hash';
+    private const HASHED = 'the policy hash';
+
+    private VaryHasherInterface|MockObject $hasher;
+
+    protected function setUp(): void
+    {
+        $this->hasher = $this->createMock(VaryHasherInterface::class);
+    }
 
     public function testAGuardThatRefusesLeavesTheFrameworkToIt(): void
     {
-        $hasher = new RecordingHasher();
+        $this->hasher->expects($this->never())->method('hash');
 
-        $result = $this->plugin($hasher, applies: false)->aroundGetVaryString(
+        $result = $this->plugin(GuardOutcome::NotApplied)->aroundGetVaryString(
             $this->context(['customer_segment' => ['9']], ['customer_segment' => []]),
             static fn (): string => self::UNTOUCHED
         );
 
-        self::assertSame(self::UNTOUCHED, $result);
-        self::assertNull($hasher->received);
+        $this->assertSame(self::UNTOUCHED, $result);
     }
 
     /**
@@ -37,22 +48,26 @@ final class VaryStringPluginTest extends TestCase
      */
     public function testAContextThePolicyDoesNotChangeIsLeftToTheFramework(): void
     {
-        $hasher = new RecordingHasher();
+        $this->hasher->expects($this->never())->method('hash');
 
-        $result = $this->plugin($hasher)->aroundGetVaryString(
+        $result = $this->plugin()->aroundGetVaryString(
             $this->context(['customer_group' => '1'], ['customer_group' => 0]),
             static fn (): string => self::UNTOUCHED
         );
 
-        self::assertSame(self::UNTOUCHED, $result);
-        self::assertNull($hasher->received);
+        $this->assertSame(self::UNTOUCHED, $result);
     }
 
     public function testAGovernedKeyIsHashedOutOfTheFilteredCopy(): void
     {
-        $hasher = new RecordingHasher();
+        $this->hasher->expects($this->once())
+            ->method('hash')
+            ->with($this->callback(
+                static fn (ContextSnapshot $snapshot): bool => $snapshot->data() === ['customer_group' => '1']
+            ))
+            ->willReturn(self::HASHED);
 
-        $result = $this->plugin($hasher)->aroundGetVaryString(
+        $result = $this->plugin()->aroundGetVaryString(
             $this->context(
                 ['customer_group' => '1', 'customer_segment' => ['9', '12']],
                 ['customer_group' => 0, 'customer_segment' => []]
@@ -60,8 +75,7 @@ final class VaryStringPluginTest extends TestCase
             static fn (): string => self::UNTOUCHED
         );
 
-        self::assertNotSame(self::UNTOUCHED, $result);
-        self::assertSame(['customer_group' => '1'], $hasher->received?->data());
+        $this->assertSame(self::HASHED, $result);
     }
 
     /**
@@ -71,9 +85,9 @@ final class VaryStringPluginTest extends TestCase
     {
         $context = $this->context(['customer_segment' => ['9']], ['customer_segment' => []]);
 
-        $this->plugin(new RecordingHasher())->aroundGetVaryString($context, static fn (): string => self::UNTOUCHED);
+        $this->plugin()->aroundGetVaryString($context, static fn (): string => self::UNTOUCHED);
 
-        self::assertSame(['9'], $context->getValue('customer_segment'));
+        $this->assertSame(['9'], $context->getValue('customer_segment'));
     }
 
     /**
@@ -81,17 +95,26 @@ final class VaryStringPluginTest extends TestCase
      */
     public function testTwoSegmentSetsCollapseToOneKey(): void
     {
-        $plugin = $this->plugin(new RecordingHasher());
+        $hashed = [];
+        $this->hasher->expects($this->exactly(2))
+            ->method('hash')
+            ->willReturnCallback(function (ContextSnapshot $snapshot) use (&$hashed): string {
+                $hashed[] = $snapshot->data();
+
+                return self::HASHED;
+            });
+
+        $plugin = $this->plugin();
         $proceed = static fn (): string => self::UNTOUCHED;
 
-        $first = $plugin->aroundGetVaryString(
+        $plugin->aroundGetVaryString(
             $this->context(
                 ['customer_group' => '1', 'customer_segment' => ['9']],
                 ['customer_group' => 0, 'customer_segment' => []]
             ),
             $proceed
         );
-        $second = $plugin->aroundGetVaryString(
+        $plugin->aroundGetVaryString(
             $this->context(
                 ['customer_group' => '1', 'customer_segment' => ['9', '10', '12']],
                 ['customer_group' => 0, 'customer_segment' => []]
@@ -99,7 +122,7 @@ final class VaryStringPluginTest extends TestCase
             $proceed
         );
 
-        self::assertSame($first, $second);
+        $this->assertSame($hashed[0], $hashed[1]);
     }
 
     /**
@@ -117,12 +140,15 @@ final class VaryStringPluginTest extends TestCase
         return $context;
     }
 
-    private function plugin(RecordingHasher $hasher, bool $applies = true): VaryStringPlugin
+    private function plugin(GuardOutcome $outcome = GuardOutcome::Applies): VaryStringPlugin
     {
+        $guard = $this->createMock(PolicyGuardInterface::class);
+        $guard->method('decide')->willReturn(new GuardDecision($outcome, 'stubbed'));
+
         return new VaryStringPlugin(
             new VaryPolicy([new ExcludedKey('customer_segment')]),
-            $hasher,
-            new StubPolicyGuard($applies)
+            $this->hasher,
+            $guard
         );
     }
 }

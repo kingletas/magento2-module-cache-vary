@@ -14,7 +14,7 @@ use RecursiveIteratorIterator;
 /**
  * This module reads Adobe Commerce tables and must still load without Adobe Commerce.
  */
-final class OpenSourceCompatibilityTest extends TestCase
+class OpenSourceCompatibilityTest extends TestCase
 {
     /**
      * Namespaces that ship only with Adobe Commerce.
@@ -52,7 +52,7 @@ final class OpenSourceCompatibilityTest extends TestCase
             }
         }
 
-        self::assertSame([], $offences, implode("\n  ", $offences));
+        $this->assertSame([], $offences, implode("\n  ", $offences));
     }
 
     public function testTheManifestRequiresNoAdobeCommercePackage(): void
@@ -70,7 +70,7 @@ final class OpenSourceCompatibilityTest extends TestCase
             ], true)
         );
 
-        self::assertSame([], array_values($commerce));
+        $this->assertSame([], array_values($commerce));
     }
 
     /**
@@ -95,7 +95,7 @@ final class OpenSourceCompatibilityTest extends TestCase
             }
         }
 
-        self::assertNotSame([], $files, 'No source files were found to check.');
+        $this->assertNotSame([], $files, 'No source files were found to check.');
 
         return $files;
     }

@@ -13,7 +13,7 @@ use Commerce\CacheVary\Model\Vary\ContextSnapshot;
 /**
  * Hashes by serialising, so a test can read the snapshot it was handed.
  */
-final class RecordingHasher implements VaryHasherInterface
+class RecordingHasher implements VaryHasherInterface
 {
     public ?ContextSnapshot $received = null;
 

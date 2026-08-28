@@ -13,7 +13,7 @@ use Commerce\CacheVary\Model\Segment\SegmentUsage;
 /**
  * Remembers which website it was asked about.
  */
-final class RecordingSegmentSource implements CacheRelevantSegmentsInterface
+class RecordingSegmentSource implements CacheRelevantSegmentsInterface
 {
     public bool $wasAsked = false;
 

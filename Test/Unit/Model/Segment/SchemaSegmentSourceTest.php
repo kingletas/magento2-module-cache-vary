@@ -14,7 +14,7 @@ use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
 use PHPUnit\Framework\TestCase;
 
-final class SchemaSegmentSourceTest extends TestCase
+class SchemaSegmentSourceTest extends TestCase
 {
     private const SEGMENT = 'magento_customersegment_segment';
     private const BANNER_LINK = 'magento_banner_customersegment';
@@ -39,13 +39,13 @@ final class SchemaSegmentSourceTest extends TestCase
     {
         $source = $this->source([self::CATALOG_RULE], []);
 
-        self::assertFalse($source->isAvailable());
-        self::assertSame([], $source->findUsages());
+        $this->assertFalse($source->isAvailable());
+        $this->assertSame([], $source->findUsages());
     }
 
     public function testItIsAvailableOnceTheSegmentTableExists(): void
     {
-        self::assertTrue($this->source(self::COMMERCE_TABLES, [[], [], []])->isAvailable());
+        $this->assertTrue($this->source(self::COMMERCE_TABLES, [[], [], []])->isAvailable());
     }
 
     public function testItNamesTheDynamicBlockASegmentDrives(): void
@@ -58,8 +58,8 @@ final class SchemaSegmentSourceTest extends TestCase
 
         $usages = $source->findUsages();
 
-        self::assertCount(1, $usages);
-        self::assertSame('segment 7 "Trade" drives dynamic block "Trade Pricing Notice"', $usages[0]->describe());
+        $this->assertCount(1, $usages);
+        $this->assertSame('segment 7 "Trade" drives dynamic block "Trade Pricing Notice"', $usages[0]->describe());
     }
 
     public function testItNamesTheRelatedProductRuleASegmentDrives(): void
@@ -70,7 +70,7 @@ final class SchemaSegmentSourceTest extends TestCase
             [],
         ]);
 
-        self::assertSame(
+        $this->assertSame(
             'segment 9 "High Value" drives related-product rule "High Value Upsells"',
             $source->findUsages()[0]->describe()
         );
@@ -88,7 +88,7 @@ final class SchemaSegmentSourceTest extends TestCase
             [['segment_id' => '3', 'name' => 'Wholesale']],
         ]);
 
-        self::assertSame(
+        $this->assertSame(
             'segment 3 "Wholesale" drives catalog price rule "Wholesale Pricing"',
             $source->findUsages()[0]->describe()
         );
@@ -108,8 +108,8 @@ final class SchemaSegmentSourceTest extends TestCase
 
         $usages = $source->findUsages();
 
-        self::assertCount(1, $usages);
-        self::assertFalse($usages[0]->isReadable());
+        $this->assertCount(1, $usages);
+        $this->assertFalse($usages[0]->isReadable());
     }
 
     /**
@@ -124,7 +124,7 @@ final class SchemaSegmentSourceTest extends TestCase
             [['segment_id' => '3', 'name' => 'Wholesale']],
         ]);
 
-        self::assertSame([], $source->findUsages());
+        $this->assertSame([], $source->findUsages());
     }
 
     /**
@@ -134,7 +134,7 @@ final class SchemaSegmentSourceTest extends TestCase
     {
         $source = $this->source([self::SEGMENT, self::CATALOG_RULE], [[]]);
 
-        self::assertSame([], $source->findUsages());
+        $this->assertSame([], $source->findUsages());
     }
 
     private function conditions(string $segmentId): string

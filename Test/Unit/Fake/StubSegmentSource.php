@@ -13,7 +13,7 @@ use Commerce\CacheVary\Model\Segment\SegmentUsage;
 /**
  * A segment source that reports whatever the test needs.
  */
-final class StubSegmentSource implements CacheRelevantSegmentsInterface
+class StubSegmentSource implements CacheRelevantSegmentsInterface
 {
     /**
      * @param SegmentUsage[] $usages

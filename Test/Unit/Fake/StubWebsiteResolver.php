@@ -14,7 +14,7 @@ use Magento\Framework\Phrase;
 /**
  * Maps store ids to websites from a plain array, and refuses anything not in it.
  */
-final class StubWebsiteResolver implements WebsiteResolverInterface
+class StubWebsiteResolver implements WebsiteResolverInterface
 {
     /**
      * @param array<int, int> $websiteByStore
