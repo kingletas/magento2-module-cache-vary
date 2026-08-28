@@ -7,17 +7,19 @@ declare(strict_types=1);
 
 namespace Commerce\CacheVary\Test\Unit\Console\Command;
 
+use Commerce\CacheVary\Api\CacheRelevantSegmentsInterface;
+use Commerce\CacheVary\Api\PolicyGuardInterface;
+use Commerce\CacheVary\Api\WebsiteResolverInterface;
 use Commerce\CacheVary\Console\Command\ShowPolicyCommand;
 use Commerce\CacheVary\Model\Config;
+use Commerce\CacheVary\Model\Segment\SegmentUsage;
+use Commerce\CacheVary\Model\Vary\GuardDecision;
+use Commerce\CacheVary\Model\Vary\GuardOutcome;
 use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
 use Commerce\CacheVary\Model\Vary\VaryPolicy;
-use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
-use Commerce\CacheVary\Model\Segment\SegmentUsage;
-use Commerce\CacheVary\Model\Vary\GuardOutcome;
-use Commerce\CacheVary\Test\Unit\Fake\StubPolicyGuard;
-use Commerce\CacheVary\Test\Unit\Fake\RecordingSegmentSource;
-use Commerce\CacheVary\Test\Unit\Fake\StubSegmentSource;
-use Commerce\CacheVary\Test\Unit\Fake\StubWebsiteResolver;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Phrase;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -26,6 +28,7 @@ class ShowPolicyCommandTest extends TestCase
 {
     private const SECTION = 'commerce_cachevary';
     private const PATH = 'policy/cacheable_customer_segments';
+    private const SEGMENT_KEY = 'customer_segment';
 
     public function testAnEmptyAllowlistIsOneVariantAndPasses(): void
     {
@@ -80,11 +83,10 @@ class ShowPolicyCommandTest extends TestCase
         $tester = $this->tester([
             'enabled' => '1',
             'allowlist' => '',
-            'guard' => new StubPolicyGuard(
-                false,
+            'guard' => $this->guard(
+                GuardOutcome::Misconfigured,
                 'a rule governs customer_group, and collapsing that would serve one shopper the page '
-                . 'built for another',
-                GuardOutcome::Misconfigured
+                . 'built for another'
             ),
         ]);
 
@@ -114,16 +116,12 @@ class ShowPolicyCommandTest extends TestCase
 
     public function testNoRulesDeclaredSaysSoRatherThanClaimingSafety(): void
     {
-        $config = new Config(
-            new ArrayScopeConfig([self::SECTION . '/policy/enabled' => '1']),
-            self::SECTION
-        );
         $tester = new CommandTester(new ShowPolicyCommand(
             new VaryPolicy(),
-            new StubPolicyGuard(true, 'narrowing the Varnish cache key'),
-            new StubSegmentSource(false),
-            new StubWebsiteResolver(),
-            $config,
+            $this->guard(GuardOutcome::Applies, 'narrowing the Varnish cache key'),
+            $this->segments(false),
+            $this->websites(),
+            new Config($this->scopeConfig(['enabled' => '1']), self::SECTION),
             'commerce:cache-vary:policy'
         ));
 
@@ -146,7 +144,7 @@ class ShowPolicyCommandTest extends TestCase
         $tester = $this->tester([
             'enabled' => '1',
             'allowlist' => '',
-            'segments' => new StubSegmentSource(true, []),
+            'segments' => $this->segments(true),
         ]);
 
         $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
@@ -161,7 +159,7 @@ class ShowPolicyCommandTest extends TestCase
         $tester = $this->tester([
             'enabled' => '1',
             'allowlist' => '',
-            'segments' => new StubSegmentSource(true, [
+            'segments' => $this->segments(true, [
                 new SegmentUsage(7, 'Trade', 'dynamic block "Trade Pricing Notice"'),
             ]),
         ]);
@@ -175,7 +173,7 @@ class ShowPolicyCommandTest extends TestCase
         $tester = $this->tester([
             'enabled' => '1',
             'allowlist' => '7',
-            'segments' => new StubSegmentSource(true, [
+            'segments' => $this->segments(true, [
                 new SegmentUsage(7, 'Trade', 'dynamic block "Trade Pricing Notice"'),
             ]),
         ]);
@@ -192,7 +190,7 @@ class ShowPolicyCommandTest extends TestCase
         $tester = $this->tester([
             'enabled' => '1',
             'allowlist' => '7',
-            'segments' => new StubSegmentSource(true, [
+            'segments' => $this->segments(true, [
                 new SegmentUsage(null, '', 'catalog price rule "Legacy"'),
             ]),
         ]);
@@ -209,7 +207,7 @@ class ShowPolicyCommandTest extends TestCase
         $tester = $this->tester([
             'enabled' => '0',
             'allowlist' => '',
-            'segments' => new StubSegmentSource(true, [
+            'segments' => $this->segments(true, [
                 new SegmentUsage(7, 'Trade', 'dynamic block "Trade Pricing Notice"'),
             ]),
         ]);
@@ -223,12 +221,9 @@ class ShowPolicyCommandTest extends TestCase
      */
     public function testTheSegmentCheckIsNarrowedToTheStoresWebsite(): void
     {
-        $segments = new RecordingSegmentSource();
+        $segments = $this->segmentsAskedFor(2);
 
         $this->tester(['enabled' => '1', 'allowlist' => '', 'segments' => $segments, 'store' => '2']);
-
-        $this->assertTrue($segments->wasAsked);
-        $this->assertSame(2, $segments->askedFor);
     }
 
     /**
@@ -236,12 +231,9 @@ class ShowPolicyCommandTest extends TestCase
      */
     public function testWithoutAStoreEveryWebsiteIsChecked(): void
     {
-        $segments = new RecordingSegmentSource();
+        $segments = $this->segmentsAskedFor(null);
 
         $this->tester(['enabled' => '1', 'allowlist' => '', 'segments' => $segments]);
-
-        $this->assertTrue($segments->wasAsked);
-        $this->assertNull($segments->askedFor);
     }
 
     /**
@@ -270,25 +262,16 @@ class ShowPolicyCommandTest extends TestCase
      */
     private function tester(array $settings): CommandTester
     {
-        $values = [
-            self::SECTION . '/policy/enabled' => (string) ($settings['enabled'] ?? '1'),
-            self::SECTION . '/' . self::PATH => (string) ($settings['allowlist'] ?? ''),
-        ];
-
-        if (isset($settings['budget'])) {
-            $values[self::SECTION . '/policy/bucket_budget'] = (string) $settings['budget'];
-        }
-
-        $config = new Config(new ArrayScopeConfig($values), self::SECTION);
-        $policy = new VaryPolicy([new AllowlistedValues($config, 'customer_segment', self::PATH)]);
+        $config = new Config($this->scopeConfig($settings), self::SECTION);
+        $policy = new VaryPolicy([new AllowlistedValues($config, self::SEGMENT_KEY, self::PATH)]);
         $applies = ($settings['applies'] ?? null) === false
             ? false
             : ($settings['enabled'] ?? '1') === '1';
         $guard = $settings['guard'] ?? ($applies
-            ? new StubPolicyGuard(true, 'narrowing the Varnish cache key')
-            : new StubPolicyGuard(false, $this->refusal($settings)));
-        $segments = $settings['segments'] ?? new StubSegmentSource(false);
-        $websites = $settings['websites'] ?? new StubWebsiteResolver([1 => 1, 2 => 2]);
+            ? $this->guard(GuardOutcome::Applies, 'narrowing the Varnish cache key')
+            : $this->guard(GuardOutcome::NotApplied, $this->refusal($settings)));
+        $segments = $settings['segments'] ?? $this->segments(false);
+        $websites = $settings['websites'] ?? $this->websites();
         $tester = new CommandTester(
             new ShowPolicyCommand($policy, $guard, $segments, $websites, $config, 'commerce:cache-vary:policy')
         );
@@ -302,5 +285,83 @@ class ShowPolicyCommandTest extends TestCase
         $tester->execute($arguments);
 
         return $tester;
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    private function scopeConfig(array $settings): ScopeConfigInterface
+    {
+        $values = [
+            self::SECTION . '/' . self::PATH => (string) ($settings['allowlist'] ?? ''),
+            self::SECTION . '/policy/bucket_budget' => isset($settings['budget'])
+                ? (string) $settings['budget']
+                : null,
+        ];
+
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->method('getValue')->willReturnCallback(
+            static fn (string $path): mixed => $values[$path] ?? null
+        );
+        $scopeConfig->method('isSetFlag')->willReturn(($settings['enabled'] ?? '1') === '1');
+
+        return $scopeConfig;
+    }
+
+    private function guard(GuardOutcome $outcome, string $reason): PolicyGuardInterface
+    {
+        $guard = $this->createMock(PolicyGuardInterface::class);
+        $guard->method('decide')->willReturn(new GuardDecision($outcome, $reason));
+
+        return $guard;
+    }
+
+    /**
+     * @param SegmentUsage[] $usages
+     */
+    private function segments(bool $available, array $usages = []): CacheRelevantSegmentsInterface
+    {
+        $segments = $this->createMock(CacheRelevantSegmentsInterface::class);
+        $segments->method('isAvailable')->willReturn($available);
+        $segments->method('contextKey')->willReturn(self::SEGMENT_KEY);
+        $segments->method('findUsages')->willReturn($usages);
+
+        return $segments;
+    }
+
+    private function segmentsAskedFor(?int $websiteId): CacheRelevantSegmentsInterface
+    {
+        $segments = $this->createMock(CacheRelevantSegmentsInterface::class);
+        $segments->method('isAvailable')->willReturn(true);
+        $segments->method('contextKey')->willReturn(self::SEGMENT_KEY);
+        $segments->expects($this->once())
+            ->method('findUsages')
+            ->with($websiteId)
+            ->willReturn([]);
+
+        return $segments;
+    }
+
+    /**
+     * @param array<int, int> $websiteByStore
+     */
+    private function websites(array $websiteByStore = [1 => 1, 2 => 2]): WebsiteResolverInterface
+    {
+        $websites = $this->createMock(WebsiteResolverInterface::class);
+        $websites->method('websiteIdOf')->willReturnCallback(
+            static function (?int $storeId) use ($websiteByStore): ?int {
+                if ($storeId === null) {
+                    return null;
+                }
+
+                if (!array_key_exists($storeId, $websiteByStore)) {
+                    throw new NoSuchEntityException(new Phrase('No such store.'));
+                }
+
+                return $websiteByStore[$storeId];
+            }
+        );
+
+        return $websites;
     }
 }

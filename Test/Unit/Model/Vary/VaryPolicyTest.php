@@ -9,8 +9,8 @@ namespace Commerce\CacheVary\Test\Unit\Model\Vary;
 
 use Commerce\CacheVary\Model\Vary\ContextSnapshot;
 use Commerce\CacheVary\Model\Vary\Rule\ExcludedKey;
+use Commerce\CacheVary\Api\VaryRuleInterface;
 use Commerce\CacheVary\Model\Vary\VaryPolicy;
-use Commerce\CacheVary\Test\Unit\Fake\FixedCeilingRule;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +34,7 @@ class VaryPolicyTest extends TestCase
 
     public function testTheCeilingIsTheProductOfTheRules(): void
     {
-        $policy = new VaryPolicy([new FixedCeilingRule('a', 4), new FixedCeilingRule('b', 8)]);
+        $policy = new VaryPolicy([$this->ruleWithCeiling('a', 4), $this->ruleWithCeiling('b', 8)]);
 
         $this->assertSame(32, $policy->ceiling());
     }
@@ -46,7 +46,7 @@ class VaryPolicyTest extends TestCase
 
     public function testOneUnboundedRuleMakesTheWholePolicyUnbounded(): void
     {
-        $policy = new VaryPolicy([new FixedCeilingRule('a', 2), new FixedCeilingRule('b', null)]);
+        $policy = new VaryPolicy([$this->ruleWithCeiling('a', 2), $this->ruleWithCeiling('b', null)]);
 
         $this->assertNull($policy->ceiling());
     }
@@ -56,7 +56,10 @@ class VaryPolicyTest extends TestCase
      */
     public function testAProductTooLargeToCountReportsUnbounded(): void
     {
-        $policy = new VaryPolicy([new FixedCeilingRule('a', 2 ** 20), new FixedCeilingRule('b', 2 ** 20)]);
+        $policy = new VaryPolicy([
+            $this->ruleWithCeiling('a', 2 ** 20),
+            $this->ruleWithCeiling('b', 2 ** 20),
+        ]);
 
         $this->assertNull($policy->ceiling());
     }
@@ -68,5 +71,15 @@ class VaryPolicyTest extends TestCase
 
         /** @phpstan-ignore-next-line the wrong type is the case under test */
         new VaryPolicy(['customer_segment' => 'not a rule']);
+    }
+
+    private function ruleWithCeiling(string $key, ?int $ceiling): VaryRuleInterface
+    {
+        $rule = $this->createMock(VaryRuleInterface::class);
+        $rule->method('key')->willReturn($key);
+        $rule->method('ceiling')->willReturn($ceiling);
+        $rule->method('apply')->willReturnArgument(0);
+
+        return $rule;
     }
 }

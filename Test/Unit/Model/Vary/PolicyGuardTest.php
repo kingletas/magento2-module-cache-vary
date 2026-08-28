@@ -12,7 +12,7 @@ use Commerce\CacheVary\Model\Vary\GuardOutcome;
 use Commerce\CacheVary\Model\Vary\PolicyGuard;
 use Commerce\CacheVary\Model\Vary\Rule\ExcludedKey;
 use Commerce\CacheVary\Model\Vary\VaryPolicy;
-use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\PageCache\Model\Config as PageCacheConfig;
 use PHPUnit\Framework\TestCase;
 
@@ -165,11 +165,12 @@ class PolicyGuardTest extends TestCase
         ?array $accepted = null,
         array $rules = []
     ): PolicyGuard {
-        $config = new Config(
-            new ArrayScopeConfig([self::SECTION . '/policy/enabled' => $enabled ? '1' : '0']),
-            self::SECTION
-        );
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->method('isSetFlag')
+            ->with(self::SECTION . '/policy/enabled')
+            ->willReturn($enabled);
 
+        $config = new Config($scopeConfig, self::SECTION);
         $pageCache = $this->createMock(PageCacheConfig::class);
         $pageCache->method('isEnabled')->willReturn($fpcOn);
         $pageCache->method('getType')->willReturn($type);

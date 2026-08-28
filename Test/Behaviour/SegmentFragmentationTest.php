@@ -15,7 +15,7 @@ use Commerce\CacheVary\Model\Vary\ContextVaryHasher;
 use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
 use Commerce\CacheVary\Model\Vary\VaryPolicy;
 use Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
-use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Commerce\CacheVary\Model\Vary\PolicyGuard;
 use Magento\PageCache\Model\Config as PageCacheConfig;
 use Commerce\Foundation\Test\Support\ObjectManagerIsolation;
@@ -137,13 +137,15 @@ class SegmentFragmentationTest extends TestCase
 
     private function plugin(bool $enabled, string $allowlist): VaryStringPlugin
     {
-        $config = new Config(
-            new ArrayScopeConfig([
-                self::SECTION . '/policy/enabled' => $enabled ? '1' : '0',
-                self::SECTION . '/' . self::PATH => $allowlist,
-            ]),
-            self::SECTION
-        );
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->method('isSetFlag')
+            ->with(self::SECTION . '/policy/enabled')
+            ->willReturn($enabled);
+        $scopeConfig->method('getValue')
+            ->with(self::SECTION . '/' . self::PATH)
+            ->willReturn($allowlist);
+
+        $config = new Config($scopeConfig, self::SECTION);
 
         $pageCache = $this->createMock(PageCacheConfig::class);
         $pageCache->method('isEnabled')->willReturn(true);

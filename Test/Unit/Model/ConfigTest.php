@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Commerce\CacheVary\Test\Unit\Model;
 
 use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
@@ -17,24 +17,38 @@ class ConfigTest extends TestCase
 
     public function testTheSwitchReadsFromItsOwnSection(): void
     {
-        $this->assertTrue($this->config([self::SECTION . '/policy/enabled' => '1'])->isEnabled());
-        $this->assertFalse($this->config([self::SECTION . '/policy/enabled' => '0'])->isEnabled());
-        $this->assertFalse($this->config([])->isEnabled());
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->expects($this->once())
+            ->method('isSetFlag')
+            ->with(self::SECTION . '/policy/enabled')
+            ->willReturn(true);
+
+        $this->assertTrue((new Config($scopeConfig, self::SECTION))->isEnabled());
+    }
+
+    public function testTheSwitchIsOffWhenNothingSetsIt(): void
+    {
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->method('isSetFlag')->willReturn(false);
+
+        $this->assertFalse((new Config($scopeConfig, self::SECTION))->isEnabled());
     }
 
     public function testTheBudgetFallsBackWhenUnsetOrNonsense(): void
     {
-        $this->assertSame(8, $this->config([])->getBucketBudget());
-        $this->assertSame(8, $this->config([self::SECTION . '/policy/bucket_budget' => '0'])->getBucketBudget());
-        $this->assertSame(8, $this->config([self::SECTION . '/policy/bucket_budget' => 'lots'])->getBucketBudget());
-        $this->assertSame(32, $this->config([self::SECTION . '/policy/bucket_budget' => '32'])->getBucketBudget());
+        $this->assertSame(8, $this->config(null)->getBucketBudget());
+        $this->assertSame(8, $this->config('0')->getBucketBudget());
+        $this->assertSame(8, $this->config('lots')->getBucketBudget());
+        $this->assertSame(32, $this->config('32')->getBucketBudget());
     }
 
-    /**
-     * @param array<string, mixed> $values
-     */
-    private function config(array $values): Config
+    private function config(mixed $budget): Config
     {
-        return new Config(new ArrayScopeConfig($values), self::SECTION);
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->method('getValue')
+            ->with(self::SECTION . '/policy/bucket_budget')
+            ->willReturn($budget);
+
+        return new Config($scopeConfig, self::SECTION);
     }
 }

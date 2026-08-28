@@ -10,7 +10,7 @@ namespace Commerce\CacheVary\Test\Unit\Model\Vary\Rule;
 use Commerce\CacheVary\Model\Config;
 use Commerce\CacheVary\Model\Vary\ContextSnapshot;
 use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
-use Commerce\CacheVary\Test\Unit\Fake\ArrayScopeConfig;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use PHPUnit\Framework\TestCase;
 
 class AllowlistedValuesTest extends TestCase
@@ -96,12 +96,12 @@ class AllowlistedValuesTest extends TestCase
 
     private function rule(string $allowlist): AllowlistedValues
     {
-        $config = new Config(
-            new ArrayScopeConfig([self::SECTION . '/' . self::PATH => $allowlist]),
-            self::SECTION
-        );
+        $scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $scopeConfig->method('getValue')
+            ->with(self::SECTION . '/' . self::PATH)
+            ->willReturn($allowlist);
 
-        return new AllowlistedValues($config, self::KEY, self::PATH);
+        return new AllowlistedValues(new Config($scopeConfig, self::SECTION), self::KEY, self::PATH);
     }
 
     /**

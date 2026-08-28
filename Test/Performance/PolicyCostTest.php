@@ -15,7 +15,7 @@ use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
 use Commerce\CacheVary\Model\Vary\VaryPolicy;
 use Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
 use Commerce\CacheVary\Model\Vary\PolicyGuard;
-use Commerce\CacheVary\Test\Unit\Fake\RecordingHasher;
+use Commerce\CacheVary\Api\VaryHasherInterface;
 use Magento\PageCache\Model\Config as PageCacheConfig;
 use Commerce\Foundation\Test\Support\BudgetAssertions;
 use Commerce\Foundation\Test\Support\CountingScopeConfig;
@@ -94,7 +94,7 @@ class PolicyCostTest extends TestCase
         $policy = new VaryPolicy([new AllowlistedValues($config, 'customer_segment', self::PATH)]);
         $plugin = new VaryStringPlugin(
             $policy,
-            new RecordingHasher(),
+            $this->createMock(VaryHasherInterface::class),
             new PolicyGuard($config, $pageCache, $policy, [PageCacheConfig::VARNISH], ['customer_group'])
         );
 
