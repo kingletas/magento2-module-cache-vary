@@ -3,6 +3,20 @@
     "description": "Decide what the full-page-cache key is made of, and report how many copies of every page it permits. Keeps high-cardinality context values, such as customer segments, out of the Varnish hash when nothing cacheable depends on them.",
     "type": "magento2-module",
     "license": "OSL-3.0",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/kingletas/magento2-module-foundation"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/kingletas/magento2-module-logger"
+        }
+    ],
     "require": {
         "php": ">=8.4",
         "commerce/module-foundation": "^1.0",
