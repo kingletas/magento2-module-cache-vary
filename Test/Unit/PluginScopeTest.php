@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Commerce\CacheVary\Test\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
@@ -28,9 +29,7 @@ class PluginScopeTest extends TestCase
         return [['frontend'], ['graphql']];
     }
 
-    /**
-     * @dataProvider areasThatComputeTheVary
-     */
+    #[DataProvider('areasThatComputeTheVary')]
     public function testThePluginIsDeclaredInEachAreaThatHashesTheKey(string $area): void
     {
         $this->assertSame(
