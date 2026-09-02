@@ -247,7 +247,9 @@ It also does not touch invalidation, purging or TTLs.
 make check
 ```
 
-Four suites, no database and no object manager. The behaviour suite drives a wide set of segment combinations through the real rules and asserts they collapse; the performance suite asserts the filter costs two config reads whatever the size of the context.
+The coding standard and all four suites — 126 tests, no database and no Magento bootstrap. The behaviour suite drives a wide set of segment combinations through the real rules and asserts they collapse; the performance suite asserts the filter costs two config reads whatever the size of the context.
+
+Narrow it to one suite with `SUITE`:
 
 ```bash
 make test SUITE=behaviour
