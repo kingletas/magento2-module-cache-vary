@@ -244,6 +244,7 @@ It also doesn't touch invalidation, purging or TTLs.
 ## Checks
 
 ```bash
+make install    # needs repo.magento.com credentials, for magento/framework
 make check
 ```
 
