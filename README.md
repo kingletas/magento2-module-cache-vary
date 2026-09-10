@@ -6,7 +6,7 @@ Decide what the full-page-cache key is made of, and report how many copies of ev
 
 ## The problem
 
-Magento hashes the `X-Magento-Vary` cookie from every value in the HTTP context that differs from its declared default, and Varnish keys on that cookie. **Every extra value in the context multiplies the number of copies the edge holds of every cacheable page**, and nothing in a stock installation reports how many that's.
+Magento hashes the `X-Magento-Vary` cookie from every value in the HTTP context that differs from its declared default, and Varnish keys on that cookie. **Every extra value in the context multiplies the number of copies the edge holds of every cacheable page**, and nothing in a stock installation reports how many that is.
 
 Customer segments are the usual cause on Adobe Commerce. `Magento\CustomerSegment` puts the shopper's whole segment set into the context on every request, so the cache splits by segment *combination* — n active segments permit up to 2ⁿ copies of every product, category and CMS page, on top of the guest copy.
 
