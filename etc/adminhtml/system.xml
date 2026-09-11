@@ -2,12 +2,12 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="commerce_cachevary" translate="label" type="text" sortOrder="905"
+        <section id="kingletas_cachevary" translate="label" type="text" sortOrder="905"
                  showInDefault="1" showInWebsite="1" showInStore="1">
             <class>separator-top</class>
             <label>Cache Vary</label>
             <tab>advanced</tab>
-            <resource>Commerce_CacheVary::config</resource>
+            <resource>Kingletas_CacheVary::config</resource>
 
             <group id="policy" translate="label comment" type="text" sortOrder="10" showInDefault="1"
                    showInWebsite="1" showInStore="1">
@@ -15,7 +15,7 @@
                 <comment><![CDATA[Magento hashes the full-page-cache key from every value in the HTTP
                     context that differs from its default, so each extra value multiplies the number of
                     copies Varnish holds of every page. Run
-                    <code>bin/magento commerce:cache-vary:policy</code> before changing anything here: it
+                    <code>bin/magento kingletas:cache-vary:policy</code> before changing anything here: it
                     prints how many copies the current settings permit.
                     <strong>A guest sends no key at all, so guests and signed-in shoppers never share an
                     object — that part is Magento's design and is not what this module changes.</strong>]]></comment>
@@ -30,7 +30,7 @@
                         <strong>It only takes effect when the full-page cache is Varnish.</strong> On the
                         built-in cache — Magento's default — it stays inert, because the built-in cache
                         keys through a different identifier this policy was never measured against. Run
-                        <code>bin/magento commerce:cache-vary:policy</code>: it says which cache is in
+                        <code>bin/magento kingletas:cache-vary:policy</code>: it says which cache is in
                         front and whether the policy is actually in force.]]></comment>
                 </field>
 
@@ -43,7 +43,7 @@
                         cart and checkout, which are never cached. Every segment left off this list stops
                         splitting the cache, and n listed segments permit up to 2^n variants.
                         <strong>You do not have to work this out by hand.</strong>
-                        <code>bin/magento commerce:cache-vary:policy</code> checks every dynamic block,
+                        <code>bin/magento kingletas:cache-vary:policy</code> checks every dynamic block,
                         related-product rule and catalog price rule, and fails while a segment that changes
                         a cached page is missing from this list.]]></comment>
                 </field>

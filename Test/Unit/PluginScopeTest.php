@@ -1,13 +1,13 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit;
+namespace Kingletas\CacheVary\Test\Unit;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ use SimpleXMLElement;
 class PluginScopeTest extends TestCase
 {
     private const INTERCEPTED = 'Magento\Framework\App\Http\Context';
-    private const PLUGIN = 'Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin';
+    private const PLUGIN = 'Kingletas\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin';
 
     /**
      * @return string[][]

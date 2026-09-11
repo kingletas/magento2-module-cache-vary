@@ -1,17 +1,17 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Vary;
+namespace Kingletas\CacheVary\Model\Vary;
 
-use Commerce\CacheVary\Api\PolicyGuardInterface;
-use Commerce\CacheVary\Api\VaryPolicyInterface;
-use Commerce\CacheVary\Model\Config;
+use Kingletas\CacheVary\Api\PolicyGuardInterface;
+use Kingletas\CacheVary\Api\VaryPolicyInterface;
+use Kingletas\CacheVary\Model\Config;
 use Magento\PageCache\Model\Config as PageCacheConfig;
 
 /**

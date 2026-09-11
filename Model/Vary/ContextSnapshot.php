@@ -1,13 +1,13 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Vary;
+namespace Kingletas\CacheVary\Model\Vary;
 
 /**
  * An immutable copy of what `Http\Context::toArray()` holds.

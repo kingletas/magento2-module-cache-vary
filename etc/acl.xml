@@ -7,7 +7,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Commerce_CacheVary::config"
+                            <resource id="Kingletas_CacheVary::config"
                                       title="Cache Vary"
                                       sortOrder="905"/>
                         </resource>

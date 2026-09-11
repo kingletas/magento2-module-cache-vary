@@ -1,22 +1,22 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Plugin\Framework\App\Http;
+namespace Kingletas\CacheVary\Test\Unit\Plugin\Framework\App\Http;
 
-use Commerce\CacheVary\Api\PolicyGuardInterface;
-use Commerce\CacheVary\Api\VaryHasherInterface;
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
-use Commerce\CacheVary\Model\Vary\GuardDecision;
-use Commerce\CacheVary\Model\Vary\GuardOutcome;
-use Commerce\CacheVary\Model\Vary\Rule\ExcludedKey;
-use Commerce\CacheVary\Model\Vary\VaryPolicy;
-use Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
+use Kingletas\CacheVary\Api\PolicyGuardInterface;
+use Kingletas\CacheVary\Api\VaryHasherInterface;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Model\Vary\GuardDecision;
+use Kingletas\CacheVary\Model\Vary\GuardOutcome;
+use Kingletas\CacheVary\Model\Vary\Rule\ExcludedKey;
+use Kingletas\CacheVary\Model\Vary\VaryPolicy;
+use Kingletas\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
 use Magento\Framework\App\Http\Context;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

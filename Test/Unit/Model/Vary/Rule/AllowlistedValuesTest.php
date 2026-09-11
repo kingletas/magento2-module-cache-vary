@@ -1,23 +1,23 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Model\Vary\Rule;
+namespace Kingletas\CacheVary\Test\Unit\Model\Vary\Rule;
 
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
-use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Model\Vary\Rule\AllowlistedValues;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use PHPUnit\Framework\TestCase;
 
 class AllowlistedValuesTest extends TestCase
 {
-    private const SECTION = 'commerce_cachevary';
+    private const SECTION = 'kingletas_cachevary';
     private const PATH = 'policy/cacheable_customer_segments';
     private const KEY = 'customer_segment';
 

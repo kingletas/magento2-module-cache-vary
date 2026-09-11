@@ -1,18 +1,18 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Plugin\Framework\App\Http;
+namespace Kingletas\CacheVary\Plugin\Framework\App\Http;
 
-use Commerce\CacheVary\Api\PolicyGuardInterface;
-use Commerce\CacheVary\Api\VaryHasherInterface;
-use Commerce\CacheVary\Api\VaryPolicyInterface;
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Api\PolicyGuardInterface;
+use Kingletas\CacheVary\Api\VaryHasherInterface;
+use Kingletas\CacheVary\Api\VaryPolicyInterface;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
 use Magento\Framework\App\Http\Context;
 
 /**

@@ -1,16 +1,16 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Model\Vary\Rule;
+namespace Kingletas\CacheVary\Test\Unit\Model\Vary\Rule;
 
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
-use Commerce\CacheVary\Model\Vary\Rule\ExcludedKey;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Model\Vary\Rule\ExcludedKey;
 use PHPUnit\Framework\TestCase;
 
 class ExcludedKeyTest extends TestCase

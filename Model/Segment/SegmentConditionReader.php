@@ -1,13 +1,13 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Segment;
+namespace Kingletas\CacheVary\Model\Segment;
 
 /**
  * Pulls the segment ids out of a rule's serialized conditions.

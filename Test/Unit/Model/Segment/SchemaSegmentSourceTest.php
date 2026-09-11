@@ -1,16 +1,16 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Model\Segment;
+namespace Kingletas\CacheVary\Test\Unit\Model\Segment;
 
-use Commerce\CacheVary\Model\Segment\SchemaSegmentSource;
-use Commerce\CacheVary\Model\Segment\SegmentConditionReader;
+use Kingletas\CacheVary\Model\Segment\SchemaSegmentSource;
+use Kingletas\CacheVary\Model\Segment\SegmentConditionReader;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
@@ -25,7 +25,7 @@ class SchemaSegmentSourceTest extends TestCase
     private const TARGET = 'magento_targetrule';
     private const CATALOG_RULE = 'catalogrule';
 
-    private const COMMERCE_TABLES = [
+    private const KINGLETAS_TABLES = [
         self::SEGMENT,
         self::BANNER_LINK,
         self::BANNER,
@@ -47,12 +47,12 @@ class SchemaSegmentSourceTest extends TestCase
 
     public function testItIsAvailableOnceTheSegmentTableExists(): void
     {
-        $this->assertTrue($this->source(self::COMMERCE_TABLES, [[], [], []])->isAvailable());
+        $this->assertTrue($this->source(self::KINGLETAS_TABLES, [[], [], []])->isAvailable());
     }
 
     public function testItNamesTheDynamicBlockASegmentDrives(): void
     {
-        $source = $this->source(self::COMMERCE_TABLES, [
+        $source = $this->source(self::KINGLETAS_TABLES, [
             [['segment_id' => '7', 'segment_name' => 'Trade', 'owner_name' => 'Trade Pricing Notice']],
             [],
             [],
@@ -66,7 +66,7 @@ class SchemaSegmentSourceTest extends TestCase
 
     public function testItNamesTheRelatedProductRuleASegmentDrives(): void
     {
-        $source = $this->source(self::COMMERCE_TABLES, [
+        $source = $this->source(self::KINGLETAS_TABLES, [
             [],
             [['segment_id' => '9', 'segment_name' => 'High Value', 'owner_name' => 'High Value Upsells']],
             [],
@@ -83,7 +83,7 @@ class SchemaSegmentSourceTest extends TestCase
      */
     public function testItReadsASegmentOutOfACatalogPriceRule(): void
     {
-        $source = $this->source(self::COMMERCE_TABLES, [
+        $source = $this->source(self::KINGLETAS_TABLES, [
             [],
             [],
             [['rule_id' => '4', 'name' => 'Wholesale Pricing', 'conditions_serialized' => $this->conditions('3')]],
@@ -101,7 +101,7 @@ class SchemaSegmentSourceTest extends TestCase
      */
     public function testAnUndecodableCatalogRuleIsReportedRatherThanSkipped(): void
     {
-        $source = $this->source(self::COMMERCE_TABLES, [
+        $source = $this->source(self::KINGLETAS_TABLES, [
             [],
             [],
             [['rule_id' => '5', 'name' => 'Legacy', 'conditions_serialized' => 'a:1:{s:4:"type";s:6:"'
@@ -119,7 +119,7 @@ class SchemaSegmentSourceTest extends TestCase
      */
     public function testACatalogRuleNamingAnUnknownSegmentIsSkipped(): void
     {
-        $source = $this->source(self::COMMERCE_TABLES, [
+        $source = $this->source(self::KINGLETAS_TABLES, [
             [],
             [],
             [['rule_id' => '6', 'name' => 'Stale', 'conditions_serialized' => $this->conditions('99')]],

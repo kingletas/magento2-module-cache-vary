@@ -1,15 +1,15 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Model\Segment;
+namespace Kingletas\CacheVary\Test\Unit\Model\Segment;
 
-use Commerce\CacheVary\Model\Segment\NoSegmentSource;
+use Kingletas\CacheVary\Model\Segment\NoSegmentSource;
 use PHPUnit\Framework\TestCase;
 
 class NoSegmentSourceTest extends TestCase

@@ -1,13 +1,13 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit;
+namespace Kingletas\CacheVary\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
@@ -21,7 +21,7 @@ class OpenSourceCompatibilityTest extends TestCase
     /**
      * Namespaces that ship only with Adobe Commerce.
      */
-    private const COMMERCE_ONLY = [
+    private const KINGLETAS_ONLY = [
         'Magento\\AdminGws',
         'Magento\\Banner',
         'Magento\\CustomerBalance',
@@ -47,7 +47,7 @@ class OpenSourceCompatibilityTest extends TestCase
         foreach ($this->sourceFiles() as $file) {
             $code = $this->withoutComments((string) file_get_contents($file));
 
-            foreach (self::COMMERCE_ONLY as $namespace) {
+            foreach (self::KINGLETAS_ONLY as $namespace) {
                 if (str_contains($code, $namespace)) {
                     $offences[] = sprintf('%s names %s', basename($file), $namespace);
                 }
@@ -62,7 +62,7 @@ class OpenSourceCompatibilityTest extends TestCase
         $manifest = json_decode((string) file_get_contents(dirname(__DIR__, 2) . '/composer.json'), true);
         $required = array_keys((array) ($manifest['require'] ?? []));
 
-        $commerce = array_filter(
+        $kingletas = array_filter(
             $required,
             static fn (string $package): bool => in_array($package, [
                 'magento/module-customer-segment',
@@ -72,7 +72,7 @@ class OpenSourceCompatibilityTest extends TestCase
             ], true)
         );
 
-        $this->assertSame([], array_values($commerce));
+        $this->assertSame([], array_values($kingletas));
     }
 
     /**

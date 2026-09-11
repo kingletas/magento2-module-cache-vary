@@ -2,29 +2,29 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
-    <preference for="Commerce\CacheVary\Api\VaryPolicyInterface"
-                type="Commerce\CacheVary\Model\Vary\VaryPolicy"/>
-    <preference for="Commerce\CacheVary\Api\VaryHasherInterface"
-                type="Commerce\CacheVary\Model\Vary\ContextVaryHasher"/>
-    <preference for="Commerce\CacheVary\Api\PolicyGuardInterface"
-                type="Commerce\CacheVary\Model\Vary\PolicyGuard"/>
+    <preference for="Kingletas\CacheVary\Api\VaryPolicyInterface"
+                type="Kingletas\CacheVary\Model\Vary\VaryPolicy"/>
+    <preference for="Kingletas\CacheVary\Api\VaryHasherInterface"
+                type="Kingletas\CacheVary\Model\Vary\ContextVaryHasher"/>
+    <preference for="Kingletas\CacheVary\Api\PolicyGuardInterface"
+                type="Kingletas\CacheVary\Model\Vary\PolicyGuard"/>
     <!--
-        Reads the schema rather than any Commerce class, so it loads on Open
+        Reads the schema rather than any Adobe Commerce class, so it loads on Open
         Source and reports itself unavailable there. Swap in NoSegmentSource to
         switch the coverage check off.
     -->
-    <preference for="Commerce\CacheVary\Api\CacheRelevantSegmentsInterface"
-                type="Commerce\CacheVary\Model\Segment\SchemaSegmentSource"/>
-    <preference for="Commerce\CacheVary\Api\WebsiteResolverInterface"
-                type="Commerce\CacheVary\Model\Store\StoreWebsiteResolver"/>
+    <preference for="Kingletas\CacheVary\Api\CacheRelevantSegmentsInterface"
+                type="Kingletas\CacheVary\Model\Segment\SchemaSegmentSource"/>
+    <preference for="Kingletas\CacheVary\Api\WebsiteResolverInterface"
+                type="Kingletas\CacheVary\Model\Store\StoreWebsiteResolver"/>
 
     <!--
         The config section id is an argument, not a constant, which is what
         makes the module rebrandable: bin/rebrand rewrites this one string.
     -->
-    <type name="Commerce\CacheVary\Model\Config">
+    <type name="Kingletas\CacheVary\Model\Config">
         <arguments>
-            <argument name="section" xsi:type="string">commerce_cachevary</argument>
+            <argument name="section" xsi:type="string">kingletas_cachevary</argument>
         </arguments>
     </type>
 
@@ -34,8 +34,8 @@
         The allowlist names the segments that genuinely change cacheable HTML;
         everything else collapses into one bucket.
     -->
-    <virtualType name="Commerce\CacheVary\Model\Vary\Rule\CustomerSegmentAllowlist"
-                 type="Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues">
+    <virtualType name="Kingletas\CacheVary\Model\Vary\Rule\CustomerSegmentAllowlist"
+                 type="Kingletas\CacheVary\Model\Vary\Rule\AllowlistedValues">
         <arguments>
             <argument name="key" xsi:type="string">customer_segment</argument>
             <argument name="configPath" xsi:type="string">policy/cacheable_customer_segments</argument>
@@ -49,7 +49,7 @@
         different identifier and is Magento's shipped default. Fastly is 42 and
         is Varnish underneath, so a Fastly store adds it here deliberately.
     -->
-    <type name="Commerce\CacheVary\Model\Vary\PolicyGuard">
+    <type name="Kingletas\CacheVary\Model\Vary\PolicyGuard">
         <arguments>
             <argument name="cachingApplications" xsi:type="array">
                 <item name="varnish" xsi:type="number">2</item>
@@ -66,31 +66,31 @@
     </type>
 
     <!-- Must name the same key as the rule above, or the coverage check reports on nothing. -->
-    <type name="Commerce\CacheVary\Model\Segment\SchemaSegmentSource">
+    <type name="Kingletas\CacheVary\Model\Segment\SchemaSegmentSource">
         <arguments>
             <argument name="contextKey" xsi:type="string">customer_segment</argument>
         </arguments>
     </type>
 
-    <type name="Commerce\CacheVary\Model\Vary\VaryPolicy">
+    <type name="Kingletas\CacheVary\Model\Vary\VaryPolicy">
         <arguments>
             <argument name="rules" xsi:type="array">
-                <item name="customer_segment" xsi:type="object">Commerce\CacheVary\Model\Vary\Rule\CustomerSegmentAllowlist</item>
+                <item name="customer_segment" xsi:type="object">Kingletas\CacheVary\Model\Vary\Rule\CustomerSegmentAllowlist</item>
             </argument>
         </arguments>
     </type>
 
     <!-- The command name is wiring, so `bin/rebrand` rewrites it with the rest. -->
-    <type name="Commerce\CacheVary\Console\Command\ShowPolicyCommand">
+    <type name="Kingletas\CacheVary\Console\Command\ShowPolicyCommand">
         <arguments>
-            <argument name="name" xsi:type="string">commerce:cache-vary:policy</argument>
+            <argument name="name" xsi:type="string">kingletas:cache-vary:policy</argument>
         </arguments>
     </type>
 
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="commerce_cache_vary_policy" xsi:type="object">Commerce\CacheVary\Console\Command\ShowPolicyCommand</item>
+                <item name="kingletas_cache_vary_policy" xsi:type="object">Kingletas\CacheVary\Console\Command\ShowPolicyCommand</item>
             </argument>
         </arguments>
     </type>

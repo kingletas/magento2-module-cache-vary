@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <commerce_cachevary>
+        <kingletas_cachevary>
             <policy>
                 <!--
                     Off, because turning it on changes what the cache keys on
@@ -13,6 +13,6 @@
                 <cacheable_customer_segments/>
                 <bucket_budget>8</bucket_budget>
             </policy>
-        </commerce_cachevary>
+        </kingletas_cachevary>
     </default>
 </config>

@@ -1,15 +1,15 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Model\Store;
+namespace Kingletas\CacheVary\Test\Unit\Model\Store;
 
-use Commerce\CacheVary\Model\Store\StoreWebsiteResolver;
+use Kingletas\CacheVary\Model\Store\StoreWebsiteResolver;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Phrase;
 use Magento\Store\Api\Data\StoreInterface;

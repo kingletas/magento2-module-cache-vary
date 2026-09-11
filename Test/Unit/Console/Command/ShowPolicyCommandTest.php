@@ -1,24 +1,24 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Console\Command;
+namespace Kingletas\CacheVary\Test\Unit\Console\Command;
 
-use Commerce\CacheVary\Api\CacheRelevantSegmentsInterface;
-use Commerce\CacheVary\Api\PolicyGuardInterface;
-use Commerce\CacheVary\Api\WebsiteResolverInterface;
-use Commerce\CacheVary\Console\Command\ShowPolicyCommand;
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Segment\SegmentUsage;
-use Commerce\CacheVary\Model\Vary\GuardDecision;
-use Commerce\CacheVary\Model\Vary\GuardOutcome;
-use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
-use Commerce\CacheVary\Model\Vary\VaryPolicy;
+use Kingletas\CacheVary\Api\CacheRelevantSegmentsInterface;
+use Kingletas\CacheVary\Api\PolicyGuardInterface;
+use Kingletas\CacheVary\Api\WebsiteResolverInterface;
+use Kingletas\CacheVary\Console\Command\ShowPolicyCommand;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Segment\SegmentUsage;
+use Kingletas\CacheVary\Model\Vary\GuardDecision;
+use Kingletas\CacheVary\Model\Vary\GuardOutcome;
+use Kingletas\CacheVary\Model\Vary\Rule\AllowlistedValues;
+use Kingletas\CacheVary\Model\Vary\VaryPolicy;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Phrase;
@@ -28,7 +28,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ShowPolicyCommandTest extends TestCase
 {
-    private const SECTION = 'commerce_cachevary';
+    private const SECTION = 'kingletas_cachevary';
     private const PATH = 'policy/cacheable_customer_segments';
     private const SEGMENT_KEY = 'customer_segment';
 
@@ -124,7 +124,7 @@ class ShowPolicyCommandTest extends TestCase
             $this->segments(false),
             $this->websites(),
             new Config($this->scopeConfig(['enabled' => '1']), self::SECTION),
-            'commerce:cache-vary:policy'
+            'kingletas:cache-vary:policy'
         ));
 
         $tester->execute([]);
@@ -275,7 +275,7 @@ class ShowPolicyCommandTest extends TestCase
         $segments = $settings['segments'] ?? $this->segments(false);
         $websites = $settings['websites'] ?? $this->websites();
         $tester = new CommandTester(
-            new ShowPolicyCommand($policy, $guard, $segments, $websites, $config, 'commerce:cache-vary:policy')
+            new ShowPolicyCommand($policy, $guard, $segments, $websites, $config, 'kingletas:cache-vary:policy')
         );
 
         $arguments = isset($settings['require-enabled']) ? ['--require-enabled' => true] : [];

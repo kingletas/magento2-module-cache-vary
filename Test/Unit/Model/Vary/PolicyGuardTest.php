@@ -1,26 +1,26 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Unit\Model\Vary;
+namespace Kingletas\CacheVary\Test\Unit\Model\Vary;
 
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Vary\GuardOutcome;
-use Commerce\CacheVary\Model\Vary\PolicyGuard;
-use Commerce\CacheVary\Model\Vary\Rule\ExcludedKey;
-use Commerce\CacheVary\Model\Vary\VaryPolicy;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Vary\GuardOutcome;
+use Kingletas\CacheVary\Model\Vary\PolicyGuard;
+use Kingletas\CacheVary\Model\Vary\Rule\ExcludedKey;
+use Kingletas\CacheVary\Model\Vary\VaryPolicy;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\PageCache\Model\Config as PageCacheConfig;
 use PHPUnit\Framework\TestCase;
 
 class PolicyGuardTest extends TestCase
 {
-    private const SECTION = 'commerce_cachevary';
+    private const SECTION = 'kingletas_cachevary';
 
     public function testItAppliesOnVarnish(): void
     {
@@ -158,7 +158,7 @@ class PolicyGuardTest extends TestCase
 
     /**
      * @param int[]|string[]|null $accepted
-     * @param \Commerce\CacheVary\Api\VaryRuleInterface[] $rules
+     * @param \Kingletas\CacheVary\Api\VaryRuleInterface[] $rules
      */
     private function guard(
         bool $enabled,

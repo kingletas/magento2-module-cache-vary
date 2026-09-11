@@ -1,23 +1,23 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Performance;
+namespace Kingletas\CacheVary\Test\Performance;
 
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
-use Commerce\CacheVary\Model\Vary\VaryPolicy;
-use Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
-use Commerce\CacheVary\Model\Vary\PolicyGuard;
-use Commerce\CacheVary\Api\VaryHasherInterface;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Vary\Rule\AllowlistedValues;
+use Kingletas\CacheVary\Model\Vary\VaryPolicy;
+use Kingletas\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
+use Kingletas\CacheVary\Model\Vary\PolicyGuard;
+use Kingletas\CacheVary\Api\VaryHasherInterface;
 use Magento\PageCache\Model\Config as PageCacheConfig;
-use Commerce\Foundation\Test\Support\BudgetAssertions;
-use Commerce\Foundation\Test\Support\CountingScopeConfig;
+use Kingletas\Foundation\Test\Support\BudgetAssertions;
+use Kingletas\Foundation\Test\Support\CountingScopeConfig;
 use Magento\Framework\App\Http\Context;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +28,7 @@ class PolicyCostTest extends TestCase
 {
     use BudgetAssertions;
 
-    private const SECTION = 'commerce_cachevary';
+    private const SECTION = 'kingletas_cachevary';
     private const PATH = 'policy/cacheable_customer_segments';
 
     /**

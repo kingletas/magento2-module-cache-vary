@@ -27,7 +27,7 @@ Say what problem that solves, in the reader's own terms, before any mechanics.
 ## Step 1: install it
 
 ```bash
-composer require commerce/module-cache-vary
+composer require kingletas/module-cache-vary
 ```
 
 ## Step 2: point it at something

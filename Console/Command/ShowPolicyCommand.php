@@ -1,23 +1,23 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Console\Command;
+namespace Kingletas\CacheVary\Console\Command;
 
-use Commerce\CacheVary\Api\CacheRelevantSegmentsInterface;
-use Commerce\CacheVary\Api\PolicyGuardInterface;
-use Commerce\CacheVary\Api\WebsiteResolverInterface;
-use Commerce\CacheVary\Api\VaryPolicyInterface;
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Segment\SegmentUsage;
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
-use Commerce\CacheVary\Model\Vary\GuardDecision;
-use Commerce\CacheVary\Model\Vary\GuardOutcome;
+use Kingletas\CacheVary\Api\CacheRelevantSegmentsInterface;
+use Kingletas\CacheVary\Api\PolicyGuardInterface;
+use Kingletas\CacheVary\Api\WebsiteResolverInterface;
+use Kingletas\CacheVary\Api\VaryPolicyInterface;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Segment\SegmentUsage;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Model\Vary\GuardDecision;
+use Kingletas\CacheVary\Model\Vary\GuardOutcome;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;

@@ -1,23 +1,23 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Test\Behaviour;
+namespace Kingletas\CacheVary\Test\Behaviour;
 
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Vary\ContextVaryHasher;
-use Commerce\CacheVary\Model\Vary\Rule\AllowlistedValues;
-use Commerce\CacheVary\Model\Vary\VaryPolicy;
-use Commerce\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Vary\ContextVaryHasher;
+use Kingletas\CacheVary\Model\Vary\Rule\AllowlistedValues;
+use Kingletas\CacheVary\Model\Vary\VaryPolicy;
+use Kingletas\CacheVary\Plugin\Framework\App\Http\VaryStringPlugin;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Commerce\CacheVary\Model\Vary\PolicyGuard;
+use Kingletas\CacheVary\Model\Vary\PolicyGuard;
 use Magento\PageCache\Model\Config as PageCacheConfig;
-use Commerce\Foundation\Test\Support\ObjectManagerIsolation;
+use Kingletas\Foundation\Test\Support\ObjectManagerIsolation;
 use Magento\Customer\Model\Context as CustomerContext;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\Http\Context as HttpContext;
@@ -32,7 +32,7 @@ class SegmentFragmentationTest extends TestCase
 {
     use ObjectManagerIsolation;
 
-    private const SECTION = 'commerce_cachevary';
+    private const SECTION = 'kingletas_cachevary';
     private const PATH = 'policy/cacheable_customer_segments';
     private const SEGMENT_KEY = 'customer_segment';
 

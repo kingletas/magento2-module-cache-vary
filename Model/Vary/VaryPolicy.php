@@ -1,16 +1,16 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Vary;
+namespace Kingletas\CacheVary\Model\Vary;
 
-use Commerce\CacheVary\Api\VaryPolicyInterface;
-use Commerce\CacheVary\Api\VaryRuleInterface;
+use Kingletas\CacheVary\Api\VaryPolicyInterface;
+use Kingletas\CacheVary\Api\VaryRuleInterface;
 use InvalidArgumentException;
 
 /**

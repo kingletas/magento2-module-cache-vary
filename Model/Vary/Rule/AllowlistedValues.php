@@ -1,17 +1,17 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Vary\Rule;
+namespace Kingletas\CacheVary\Model\Vary\Rule;
 
-use Commerce\CacheVary\Api\VaryRuleInterface;
-use Commerce\CacheVary\Model\Config;
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Api\VaryRuleInterface;
+use Kingletas\CacheVary\Model\Config;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
 
 /**
  * Narrows one key to the values an operator has declared cache-relevant, sorted.

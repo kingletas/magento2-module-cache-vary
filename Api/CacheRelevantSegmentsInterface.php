@@ -1,15 +1,15 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Api;
+namespace Kingletas\CacheVary\Api;
 
-use Commerce\CacheVary\Model\Segment\SegmentUsage;
+use Kingletas\CacheVary\Model\Segment\SegmentUsage;
 
 /**
  * Finds the customer segments that change what a cacheable page renders.

@@ -1,15 +1,15 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Store;
+namespace Kingletas\CacheVary\Model\Store;
 
-use Commerce\CacheVary\Api\WebsiteResolverInterface;
+use Kingletas\CacheVary\Api\WebsiteResolverInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 
 /**

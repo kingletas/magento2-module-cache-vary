@@ -1,4 +1,4 @@
-# Commerce_CacheVary
+# Kingletas_CacheVary
 
 Decide what the full-page-cache key is made of, and report how many copies of every page it permits.
 
@@ -21,8 +21,8 @@ This module lets an operator declare which values may reach the key, and fails a
 ## Installation
 
 ```bash
-composer require commerce/module-cache-vary
-bin/magento module:enable Commerce_CacheVary
+composer require kingletas/module-cache-vary
+bin/magento module:enable Kingletas_CacheVary
 bin/magento setup:upgrade
 ```
 
@@ -33,7 +33,7 @@ bin/magento setup:upgrade
 ## The report
 
 ```bash
-bin/magento commerce:cache-vary:policy
+bin/magento kingletas:cache-vary:policy
 ```
 
 ```text
@@ -68,7 +68,7 @@ No customer segment drives content on a cacheable page.
 
 ## Configuration
 
-**Stores → Configuration → Advanced → Cache Vary**, or `commerce_cachevary/policy/*`.
+**Stores → Configuration → Advanced → Cache Vary**, or `kingletas_cachevary/policy/*`.
 
 | Setting | Default | |
 |---|---|---|
@@ -98,8 +98,8 @@ Coverage is only checked while the policy is in force. With it switched off, or 
 On a multi-website store, run it per store, because the allowlist is website-scoped too:
 
 ```bash
-bin/magento commerce:cache-vary:policy --store 1
-bin/magento commerce:cache-vary:policy --store 7
+bin/magento kingletas:cache-vary:policy --store 1
+bin/magento kingletas:cache-vary:policy --store 7
 ```
 
 ---
@@ -117,7 +117,7 @@ The guard fails closed: unknown caching application, cache switched off, or poli
 Fastly is Varnish underneath and uses the same cookie, but registers as caching application `42`. Adding it's a deliberate edit:
 
 ```xml
-<type name="Commerce\CacheVary\Model\Vary\PolicyGuard">
+<type name="Kingletas\CacheVary\Model\Vary\PolicyGuard">
     <arguments>
         <argument name="cachingApplications" xsi:type="array">
             <item name="varnish" xsi:type="number">2</item>
@@ -158,7 +158,7 @@ Customer segments are not installed here, so nothing was checked against cacheab
 
 *Not checked* isn't the same claim as *nothing found*, and reporting the second would be a green tick over an unanswered question.
 
-`SchemaSegmentSource` reads the segment, banner, target-rule and catalog-rule tables **through the schema, naming no Adobe Commerce class**. An absent table means unavailable, not empty. `Test/Unit/OpenSourceCompatibilityTest.php` enforces it: it strips comments from every source file and fails if executable code names a Commerce-only namespace, or if the manifest requires a Commerce-only package.
+`SchemaSegmentSource` reads the segment, banner, target-rule and catalog-rule tables **through the schema, naming no Adobe Commerce class**. An absent table means unavailable, not empty. `Test/Unit/OpenSourceCompatibilityTest.php` enforces it: it strips comments from every source file and fails if executable code names an Adobe Commerce-only namespace, or if the manifest requires an Adobe Commerce-only package.
 
 To switch the check off entirely, point the preference at `NoSegmentSource`.
 
@@ -196,13 +196,13 @@ Rules are `di.xml`, so a new one is configuration rather than a code change:
 
 ```xml
 <virtualType name="Vendor\Module\WeeeRegionRule"
-             type="Commerce\CacheVary\Model\Vary\Rule\ExcludedKey">
+             type="Kingletas\CacheVary\Model\Vary\Rule\ExcludedKey">
     <arguments>
         <argument name="key" xsi:type="string">weee_tax_region</argument>
     </arguments>
 </virtualType>
 
-<type name="Commerce\CacheVary\Model\Vary\VaryPolicy">
+<type name="Kingletas\CacheVary\Model\Vary\VaryPolicy">
     <arguments>
         <argument name="rules" xsi:type="array">
             <item name="weee_tax_region" xsi:type="object">Vendor\Module\WeeeRegionRule</item>

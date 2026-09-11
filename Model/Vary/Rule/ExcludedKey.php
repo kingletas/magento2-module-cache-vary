@@ -1,16 +1,16 @@
 <?php
 /**
- * @package   Commerce_CacheVary
- * @copyright Copyright (c) the Commerce modules authors
+ * @package   Kingletas_CacheVary
+ * @copyright Copyright (c) the Kingletas modules authors
  * @license   OSL-3.0 https://opensource.org/licenses/OSL-3.0
  */
 
 declare(strict_types=1);
 
-namespace Commerce\CacheVary\Model\Vary\Rule;
+namespace Kingletas\CacheVary\Model\Vary\Rule;
 
-use Commerce\CacheVary\Api\VaryRuleInterface;
-use Commerce\CacheVary\Model\Vary\ContextSnapshot;
+use Kingletas\CacheVary\Api\VaryRuleInterface;
+use Kingletas\CacheVary\Model\Vary\ContextSnapshot;
 
 /**
  * Keeps one key out of the cache key entirely, for content that never varies by it.
