@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.0.0
+
 The vendor is now Kingletas: the package is `kingletas/module-cache-vary`, the namespace
 `Kingletas\CacheVary` and the module `Kingletas_CacheVary`, and every config
 section, table, console command and queue name starts with `kingletas`
