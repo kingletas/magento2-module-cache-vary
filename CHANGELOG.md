@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+Requires `kingletas/module-foundation` 2.1 or later, whose wiring assertions the
+test suite now uses. Nothing about how the module behaves changed.
+
 Tooling only. The wiring suite fails when an encrypted admin field has no
 sensitive declaration, so the next credential cannot ship undeclared. Nothing
 about how the module behaves changed.
