@@ -70,6 +70,8 @@ No customer segment drives content on a cacheable page.
 
 **Stores → Configuration → Advanced → Cache Vary**, or `kingletas_cachevary/policy/*`.
 
+**[Recommended settings](docs/recommended-settings.md)** says what to set on a production store and why.
+
 | Setting | Default | |
 |---|---|---|
 | Apply The Policy | `0` | Off. Nothing is filtered until this is on. |
