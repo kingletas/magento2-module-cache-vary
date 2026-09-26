@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.1 - 2026-09-26
 
 Requires `kingletas/module-foundation` 2.1 or later, whose wiring assertions the
 test suite now uses. Nothing about how the module behaves changed.
